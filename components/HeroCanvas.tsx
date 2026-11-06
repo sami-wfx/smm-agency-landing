@@ -32,19 +32,31 @@ export function HeroCanvas() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    setOk(!matchMedia("(prefers-reduced-motion: reduce)").matches && hasWebGL());
+    const allowed = !matchMedia("(prefers-reduced-motion: reduce)").matches && hasWebGL();
+    // сначала текст и кнопка, 3D — когда браузер свободен
+    type W = Window & {
+      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
+      cancelIdleCallback?: (n: number) => void;
+    };
+    const w = window as W;
+    const useIdle = typeof w.requestIdleCallback === "function";
+    const t = useIdle ? w.requestIdleCallback!(() => setOk(allowed), { timeout: 1500 }) : window.setTimeout(() => setOk(allowed), 400);
     const el = box.current;
     if (!el) return;
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0 });
     io.observe(el);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+      if (useIdle) w.cancelIdleCallback?.(t);
+      else clearTimeout(t);
+    };
   }, []);
 
   return (
     <div
       ref={box}
       aria-hidden
-      className="hero-3d pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[300px] md:inset-0 md:h-auto"
+      className="hero-3d pointer-events-none absolute inset-x-0 bottom-[72px] z-[1] h-[210px] md:inset-0 md:bottom-0 md:h-auto"
     >
       {ok && (
         <Boundary>

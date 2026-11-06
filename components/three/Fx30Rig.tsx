@@ -17,6 +17,18 @@ const LIME = "#b8ff3c";
 const W = 2.6;
 const H = 1.56;
 
+/** Детерминированный генератор — текстуры одинаковы при каждом рендере (и «чистая» функция для React). */
+function rng(seed: number) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 /** Мелкое «зерно» для матового корпуса и кожзама на хвате. */
 function useGrainTexture(scale: number) {
   return useMemo(() => {
@@ -25,10 +37,11 @@ function useGrainTexture(scale: number) {
     const g = c.getContext("2d")!;
     g.fillStyle = "#808080";
     g.fillRect(0, 0, 128, 128);
+    const r = rng(7);
     for (let i = 0; i < 2600; i++) {
-      const v = 90 + Math.random() * 110;
+      const v = 90 + r() * 110;
       g.fillStyle = `rgb(${v},${v},${v})`;
-      g.fillRect(Math.random() * 128, Math.random() * 128, 2, 2);
+      g.fillRect(r() * 128, r() * 128, 2, 2);
     }
     const t = new THREE.CanvasTexture(c);
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
@@ -50,10 +63,11 @@ function useRearTexture() {
     const V = (v: number) => v * ch;
     g.fillStyle = "#222327";
     g.fillRect(0, 0, cw, ch);
+    const r = rng(11);
     for (let i = 0; i < 9000; i++) {
-      const v = 25 + Math.random() * 28;
+      const v = 25 + r() * 28;
       g.fillStyle = `rgb(${v},${v},${v + 2})`;
-      g.fillRect(Math.random() * cw, Math.random() * ch, 2, 2);
+      g.fillRect(r() * cw, r() * ch, 2, 2);
     }
     const label = (t: string, u: number, v: number, size = 15, a = 0.85) => {
       g.save();

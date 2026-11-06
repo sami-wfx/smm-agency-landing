@@ -39,7 +39,7 @@ function CinemaCamera() {
   });
 
   return (
-    <group position={[wide ? 2.35 : 0, wide ? -0.2 : -0.1, 0]} scale={wide ? 0.62 : 0.78}>
+    <group position={[wide ? 2.5 : 0, wide ? -0.55 : -0.1, 0]} scale={wide ? 0.55 : 0.7}>
       <Float speed={1.6} rotationIntensity={0.12} floatIntensity={0.55}>
         <group ref={root}>
           <Fx30Rig />
@@ -67,14 +67,14 @@ export default function HeroScene({ active }: { active: boolean }) {
     >
       <ambientLight intensity={0.7} />
       <directionalLight position={[3, 5, 4]} intensity={2.6} color="#ffffff" />
-      <pointLight position={[-4, 1, 3]} intensity={18} color={VIOLET} distance={14} />
+      <pointLight position={[-4, 1, 3]} intensity={7} color={VIOLET} distance={14} />
       <pointLight position={[4, -1, -3]} intensity={14} color={LIME} distance={12} />
 
       {/* студийное окружение из «софтбоксов» — без загрузки внешних HDR-файлов */}
       <Environment resolution={256}>
         <Lightformer form="rect" intensity={5} position={[0, 5, 2]} scale={[10, 3, 1]} rotation-x={Math.PI / 2} />
         <Lightformer form="rect" intensity={4} color={LIME} position={[5, 1, 0]} scale={[2, 6, 1]} rotation-y={-Math.PI / 2} />
-        <Lightformer form="rect" intensity={4.5} color={VIOLET} position={[-5, 1, 1]} scale={[2, 6, 1]} rotation-y={Math.PI / 2} />
+        <Lightformer form="rect" intensity={1.6} color={VIOLET} position={[-5, 1, 1]} scale={[2, 6, 1]} rotation-y={Math.PI / 2} />
         <Lightformer form="ring" intensity={3} position={[0, 0, -6]} scale={6} />
         <Lightformer form="rect" intensity={2.5} position={[0, -3, 3]} scale={[8, 1.5, 1]} rotation-x={-Math.PI / 2} />
       </Environment>

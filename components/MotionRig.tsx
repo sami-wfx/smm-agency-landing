@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { setSmoother } from "@/lib/smoother";
+import { formatCounter } from "@/lib/format";
 
 /**
  * Ядро анимаций на GSAP + ScrollTrigger:
@@ -41,8 +42,9 @@ export function MotionRig() {
         const target = parseFloat(el.dataset.target ?? "0");
         const decimals = parseInt(el.dataset.decimals ?? "0", 10);
         const { prefix = "", suffix = "" } = el.dataset;
-        const fmt = (v: number) => prefix + (decimals ? v.toFixed(decimals) : Math.round(v).toString()) + suffix;
+        const fmt = (v: number) => formatCounter(v, { decimals, prefix, suffix });
         if (reduce) return void (el.textContent = fmt(target));
+        el.textContent = fmt(0); // стартуем с нуля только когда JS уже работает; блок ещё скрыт (.rise)
         const state = { v: 0 };
         ScrollTrigger.create({
           trigger: el,

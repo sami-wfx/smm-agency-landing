@@ -14,17 +14,19 @@ import { Contacts } from "@/components/Contacts";
 import { Footer } from "@/components/Footer";
 import { LeadModal } from "@/components/LeadModal";
 import { MotionRig } from "@/components/MotionRig";
+import { SkipLink } from "@/components/SkipLink";
 
 export default function Home() {
   return (
     <UIProvider>
+      <SkipLink />
       <BgFx />
       <CursorGlow />
       <Nav />
       <Drawer />
       <div id="smooth-wrapper">
         <div id="smooth-content">
-          <main id="top">
+          <main id="top" tabIndex={-1}>
             <Hero />
             <Marquee />
             <Equipment />

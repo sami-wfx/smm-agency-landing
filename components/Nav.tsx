@@ -11,6 +11,7 @@ export function Nav() {
   return (
     <motion.nav
       id="nav"
+      aria-label="Основное меню"
       initial={{ y: "-100%" }}
       animate={{ y: 0 }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -18,7 +19,7 @@ export function Nav() {
       <div className="container bar">
         <AnchorLink href="#top" className="logo">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={asset("logo-triocrash.png")} alt="TRIOCRASH" />
+          <img src={asset("logo-triocrash.png")} alt="TRIOCRASH — на главную" width={152} height={24} />
         </AnchorLink>
         <div className="links">
           {NAV_LINKS.map((l) => (

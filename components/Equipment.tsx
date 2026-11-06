@@ -110,6 +110,8 @@ export function Equipment() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // WebGL можно определить только в браузере, иначе будет расхождение с серверным HTML
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOk(hasWebGL());
     const el = stage.current;
     if (!el) return;
