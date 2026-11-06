@@ -1,0 +1,38 @@
+[
+  {
+    "id": "case-1",
+    "niche": "Beauty-бренд",
+    "title": "Рост охватов с нуля до 2.1M за 3 месяца",
+    "metricTarget": 340,
+    "metricPrefix": "+",
+    "metricSuffix": "%",
+    "metricLabel": "охваты",
+    "beforeImage": "",
+    "afterImage": "",
+    "youtubeUrl": ""
+  },
+  {
+    "id": "case-2",
+    "niche": "Ресторан",
+    "title": "Поток заявок через reels и автоворонку в Telegram",
+    "metricTarget": 91,
+    "metricPrefix": "+",
+    "metricSuffix": "",
+    "metricLabel": "заявок/мес",
+    "beforeImage": "",
+    "afterImage": "",
+    "youtubeUrl": ""
+  },
+  {
+    "id": "case-3",
+    "niche": "Личный бренд",
+    "title": "Из микроблога в узнаваемого эксперта ниши",
+    "metricTarget": 18,
+    "metricPrefix": "+",
+    "metricSuffix": "K",
+    "metricLabel": "подписчиков",
+    "beforeImage": "",
+    "afterImage": "",
+    "youtubeUrl": ""
+  }
+]
