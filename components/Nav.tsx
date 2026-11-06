@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import { NAV_LINKS } from "@/lib/content";
 import { asset } from "@/lib/asset";
 import { AnchorLink } from "./AnchorLink";
@@ -9,13 +8,7 @@ import { useUI } from "./UIProvider";
 export function Nav() {
   const { openModal, openDrawer } = useUI();
   return (
-    <motion.nav
-      id="nav"
-      aria-label="Основное меню"
-      initial={{ y: "-100%" }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <nav id="nav" aria-label="Основное меню">
       <div className="container bar">
         <AnchorLink href="#top" className="logo">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -37,6 +30,6 @@ export function Nav() {
           </button>
         </div>
       </div>
-    </motion.nav>
+    </nav>
   );
 }

@@ -3,34 +3,21 @@
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { setSmoother } from "@/lib/smoother";
 import { formatCounter } from "@/lib/format";
 
 /**
  * Ядро анимаций на GSAP + ScrollTrigger:
- *  - плавный скролл (ScrollSmoother) на устройствах с мышью;
  *  - появление блоков (.reveal-group / .rise), счётчики, линия процесса, параллакс свечений.
  * Ничего не рендерит.
  */
 export function MotionRig() {
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+    gsap.registerPlugin(ScrollTrigger);
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const fine = matchMedia("(pointer: fine)").matches;
     document.documentElement.classList.toggle("reduced", reduce);
 
     const ctx = gsap.context(() => {
-      if (!reduce && fine) {
-        setSmoother(
-          ScrollSmoother.create({
-            wrapper: "#smooth-wrapper",
-            content: "#smooth-content",
-            smooth: 1.1,
-          }),
-        );
-      }
-
       // появление блоков
       gsap.utils.toArray<HTMLElement>(".reveal-group, .rise").forEach((el) => {
         if (reduce) return el.classList.add("in-view");
