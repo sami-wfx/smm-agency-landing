@@ -73,30 +73,30 @@ section#hero.hx{
 #hero .hx-cue i{width:1.5px;height:24px;background:linear-gradient(180deg,transparent,#fff);animation:hxCue 1.8s ease-in-out infinite;transform-origin:50% 0}
 @keyframes hxCue{0%{transform:scaleY(0);opacity:0}40%{opacity:1}100%{transform:scaleY(1);opacity:0}}
 
-/* ---------- телефон (портрет): три одинаковые колонки, все видны ---------- */
+/* ---------- телефон (портрет): без рамок, люди целиком ----------
+   слева — выходит первым; в центре — выходит поверх левого; справа — выходит из-под среднего. */
 @media(max-width:560px){
-  /* надпись крупно в две строки сверху */
+  #hero .hx-stage{--hc:min(112vw,58svh);--hs:calc(var(--hc) * .72);--off:34vw}
+  /* надпись крупно в две строки, прямо над головами */
   #hero .hx-giant{
-    flex-wrap:wrap;align-content:flex-start;align-items:flex-start;justify-content:center;text-align:center;
-    padding:calc(var(--nav-h) + 4svh) 8px 0;
+    top:auto;bottom:calc(var(--hc) + 2.5svh);height:auto;padding:0 8px;
+    flex-wrap:wrap;align-content:flex-end;align-items:flex-end;justify-content:center;text-align:center;
     font-size:clamp(44px,19.5vw,120px);line-height:.98;
-    transform:translate3d(0,calc((1 - var(--in1)) * 16svh),0);
+    transform:translate3d(0,calc((1 - var(--in1)) * 14svh),0);
   }
   #hero .hx-br{display:block;flex-basis:100%;height:0}
-  /* три ровные колонки-портрета на всю ширину */
-  #hero .hx-team{
-    left:10px;right:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;align-items:stretch;
-    height:clamp(320px,calc(100svh - 290px),680px);
-  }
-  #hero .hx-fig,#hero .hx-fig:nth-child(n){
-    width:auto;height:100%;margin:0 !important;transform:none !important;transition:none;
-    overflow:hidden;border-radius:16px 16px 0 0;
-    background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),radial-gradient(90% 60% at 50% 100%,var(--tone),transparent 80%);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
-  }
+  #hero .hx-team{display:block;left:0;right:0;bottom:0;height:var(--hc)}
+  #hero .hx-fig{position:absolute;left:50%;bottom:0;margin:0;transition:none;overflow:visible;background:none;box-shadow:none;border-radius:0}
+  /* 1 — слева, поднимается снизу */
+  #hero .hx-fig:nth-child(1){z-index:2;width:calc(var(--hs) * .75);height:var(--hs);margin-left:calc(var(--hs) * -.375);transform:translate3d(calc(var(--off) * -1),0,0) scale(1)}
+  /* 2 — в центре, поднимается снизу поверх левого */
+  #hero .hx-fig:nth-child(2){z-index:4;width:calc(var(--hc) * .75);height:var(--hc);margin-left:calc(var(--hc) * -.375);transform:none}
+  /* 3 — справа, выезжает из-за спины среднего (не поднимается, а выдвигается в сторону) */
+  #hero .hx-fig:nth-child(3){z-index:1;width:calc(var(--hs) * .75);height:var(--hs);margin-left:calc(var(--hs) * -.375);transform:translate3d(calc(var(--off) * var(--in2)),0,0) scale(1)}
+  /* пока средний не вышел, третий прячется внизу вместе с ним (за его спиной), потом выезжает вбок */
+  #hero .hx-fig:nth-child(3) .hx-in{transform:translate3d(0,calc((1 - var(--in1)) * 108%),0)}
   #hero .hx-glow{display:none}
-  #hero .hx-breathe{animation:none}
-  #hero .hx-breathe img{object-fit:cover;object-position:50% 6%;filter:none}
+  #hero .hx-breathe img{filter:drop-shadow(0 10px 16px rgba(0,0,0,.45))}
   #hero .hx-cue{display:none}
 }
 
