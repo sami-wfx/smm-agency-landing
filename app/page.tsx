@@ -4,6 +4,8 @@ import { CursorGlow } from "@/components/CursorGlow";
 import { Nav } from "@/components/Nav";
 import { Drawer } from "@/components/Drawer";
 import { Hero } from "@/components/Hero";
+import { Marquee } from "@/components/Marquee";
+import { Equipment } from "@/components/Equipment";
 import { Services } from "@/components/Services";
 import { Cases } from "@/components/Cases";
 import { Pricing } from "@/components/Pricing";
@@ -24,6 +26,8 @@ export default function Home() {
         <div id="smooth-content">
           <main id="top">
             <Hero />
+            <Marquee />
+            <Equipment />
             <Services />
             <Cases />
             <Pricing />

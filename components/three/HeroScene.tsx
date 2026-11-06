@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, Environment, Float, Lightformer, RoundedBox, Sparkles } from "@react-three/drei";
+import { ContactShadows, Environment, Float, Lightformer, Sparkles } from "@react-three/drei";
+import { Fx30Rig } from "./Fx30Rig";
 
 const LIME = "#b8ff3c";
 const VIOLET = "#8b5cf6";
@@ -22,123 +23,29 @@ function usePointer() {
   return p;
 }
 
-/** Кинокамера в стиле Sony FX30 (компактная Cinema Line): корпус, байонет, объектив, ручка, экран. */
+/** Sony FX30 с объективом — реальные пропорции, реагирует на курсор и прокрутку. */
 function CinemaCamera() {
   const root = useRef<THREE.Group>(null);
-  const tally = useRef<THREE.MeshStandardMaterial>(null);
   const pointer = usePointer();
   const size = useThree((s) => s.size);
   const wide = size.width >= 768;
 
-  useFrame((state, dt) => {
+  useFrame((_, dt) => {
     const g = root.current;
     if (!g) return;
     const scroll = Math.min(window.scrollY / Math.max(innerHeight, 1), 2);
-    g.rotation.y = THREE.MathUtils.damp(g.rotation.y, -0.7 + pointer.current.x * 0.45 + scroll * 1.1, 4, dt);
-    g.rotation.x = THREE.MathUtils.damp(g.rotation.x, 0.08 - pointer.current.y * 0.18, 4, dt);
-    if (tally.current) tally.current.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3.2) > 0 ? 4 : 0.25;
+    g.rotation.y = THREE.MathUtils.damp(g.rotation.y, -0.75 + pointer.current.x * 0.45 + scroll * 1.1, 4, dt);
+    g.rotation.x = THREE.MathUtils.damp(g.rotation.x, 0.1 - pointer.current.y * 0.18, 4, dt);
   });
 
-  const body = <meshPhysicalMaterial color="#34363f" metalness={0.75} roughness={0.34} clearcoat={0.6} clearcoatRoughness={0.25} envMapIntensity={1.4} />;
-  const rubber = <meshStandardMaterial color="#1b1c20" metalness={0.3} roughness={0.55} envMapIntensity={1.2} />;
-  const steel = <meshStandardMaterial color="#c9ccd2" metalness={1} roughness={0.22} />;
-  const ring = (z: number, r = 0.6, h = 0.05) => (
-    <mesh key={z} position={[0, 0, z]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-      <cylinderGeometry args={[r, r, h, 48]} />
-      {rubber}
-    </mesh>
-  );
-
   return (
-    <group position={[wide ? 2.35 : 0, wide ? -0.3 : -0.1, 0]} scale={wide ? 0.68 : 0.85}>
+    <group position={[wide ? 2.35 : 0, wide ? -0.2 : -0.1, 0]} scale={wide ? 0.62 : 0.78}>
       <Float speed={1.6} rotationIntensity={0.12} floatIntensity={0.55}>
         <group ref={root}>
-          {/* корпус */}
-          <RoundedBox args={[2.3, 1.35, 1.5]} radius={0.14} smoothness={5} castShadow receiveShadow>
-            {body}
-          </RoundedBox>
-          {/* верхняя ручка */}
-          <mesh position={[0, 0.98, -0.05]} castShadow>
-            <boxGeometry args={[1.7, 0.1, 0.22]} />
-            {body}
-          </mesh>
-          {[-0.75, 0.75].map((x) => (
-            <mesh key={x} position={[x, 0.82, -0.05]} castShadow>
-              <boxGeometry args={[0.12, 0.34, 0.22]} />
-              {body}
-            </mesh>
-          ))}
-          {/* кнопки и диск на верхней панели */}
-          <mesh position={[0.55, 0.7, 0.35]}>
-            <cylinderGeometry args={[0.1, 0.1, 0.06, 24]} />
-            <meshStandardMaterial color={LIME} emissive={LIME} emissiveIntensity={0.7} toneMapped={false} />
-          </mesh>
-          <mesh position={[0.2, 0.7, 0.35]}>
-            <cylinderGeometry args={[0.07, 0.07, 0.05, 24]} />
-            {steel}
-          </mesh>
-          {/* индикатор записи */}
-          <mesh position={[-0.85, 0.5, 0.76]}>
-            <sphereGeometry args={[0.055, 20, 20]} />
-            <meshStandardMaterial ref={tally} color="#ff2a2a" emissive="#ff1a1a" emissiveIntensity={3} toneMapped={false} />
-          </mesh>
-          {/* поворотный экран сбоку */}
-          <group position={[1.2, 0.05, 0.05]} rotation={[0, 0.25, 0]}>
-            <mesh castShadow>
-              <boxGeometry args={[0.08, 0.95, 0.8]} />
-              {body}
-            </mesh>
-            <mesh position={[0.045, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
-              <planeGeometry args={[0.7, 0.8]} />
-              <meshStandardMaterial color="#1b1140" emissive={VIOLET} emissiveIntensity={0.9} roughness={0.2} toneMapped={false} />
-            </mesh>
-          </group>
-
-          {/* байонет */}
-          <mesh position={[0, 0, 0.82]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-            <cylinderGeometry args={[0.66, 0.66, 0.18, 64]} />
-            {steel}
-          </mesh>
-          {/* объектив */}
-          <group position={[0, 0, 0.9]}>
-            <mesh position={[0, 0, 0.75]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-              <cylinderGeometry args={[0.56, 0.58, 1.5, 64]} />
-              {rubber}
-            </mesh>
-            {[0.25, 0.4, 0.55, 0.7, 0.85, 1.0].map((z) => ring(z))}
-            {/* фокусное кольцо с акцентом */}
-            <mesh position={[0, 0, 1.2]} rotation={[Math.PI / 2, 0, 0]}>
-              <torusGeometry args={[0.6, 0.022, 16, 80]} />
-              <meshStandardMaterial color={LIME} emissive={LIME} emissiveIntensity={1.1} toneMapped={false} />
-            </mesh>
-            {/* бленда */}
-            <mesh position={[0, 0, 1.62]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-              <cylinderGeometry args={[0.7, 0.62, 0.35, 64, 1, true]} />
-              <meshStandardMaterial color="#09090b" metalness={0.3} roughness={0.8} side={THREE.DoubleSide} />
-            </mesh>
-            {/* линза */}
-            <mesh position={[0, 0, 1.5]} rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.5, 0.5, 0.04, 64]} />
-              <meshPhysicalMaterial
-                color="#10102a"
-                metalness={0.2}
-                roughness={0.03}
-                clearcoat={1}
-                clearcoatRoughness={0}
-                iridescence={1}
-                iridescenceIOR={1.6}
-                envMapIntensity={2.2}
-              />
-            </mesh>
-            <mesh position={[0, 0, 1.52]} rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.16, 0.16, 0.02, 48]} />
-              <meshStandardMaterial color="#020008" emissive={VIOLET} emissiveIntensity={0.12} roughness={0.1} toneMapped={false} />
-            </mesh>
-          </group>
+          <Fx30Rig />
         </group>
       </Float>
-
-      <ContactShadows position={[0, -1.45, 0]} opacity={0.55} scale={9} blur={2.6} far={3} color="#000000" />
+      <ContactShadows position={[0, -1.6, 0]} opacity={0.55} scale={9} blur={2.6} far={3} color="#000000" />
     </group>
   );
 }

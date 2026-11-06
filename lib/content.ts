@@ -24,6 +24,7 @@ export type CaseItem = {
 
 export const NAV_LINKS = [
   { href: "#services", label: "Услуги" },
+  { href: "#equipment", label: "Оборудование" },
   { href: "#cases", label: "Кейсы" },
   { href: "#pricing", label: "Тарифы" },
   { href: "#process", label: "Процесс" },
