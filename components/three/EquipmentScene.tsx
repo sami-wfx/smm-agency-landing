@@ -14,7 +14,7 @@ function Rig({ explode }: { explode: MutableRefObject<number> }) {
   const size = useThree((s) => s.size);
   const wide = size.width >= 640;
   return (
-    <group ref={group} position={[0, wide ? 1.15 : 1.0, 0]} scale={wide ? 0.82 : 0.62}>
+    <group ref={group} position={[0, wide ? 1.15 : 1.0, 0]} scale={wide ? 0.9 : 0.68}>
       <Float speed={1.4} rotationIntensity={0.06} floatIntensity={0.35}>
         <Fx30Rig explode={explode} gimbal labels={wide} />
       </Float>
@@ -29,7 +29,7 @@ export default function EquipmentScene({ active, explode }: { active: boolean; e
     <Canvas
       frameloop={active ? "always" : "never"}
       dpr={[1, 1.75]}
-      camera={{ position: [5.2, 1.6, 12.5], fov: 32 }}
+      camera={{ position: [6.4, 1.4, 10.6], fov: 32 }}
       gl={{ antialias: !isCoarse, alpha: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
@@ -37,13 +37,14 @@ export default function EquipmentScene({ active, explode }: { active: boolean; e
       }}
     >
       <ambientLight intensity={0.7} />
-      <directionalLight position={[3, 6, 5]} intensity={2.6} />
-      <pointLight position={[-5, 1, 3]} intensity={20} color={VIOLET} distance={16} />
+      <directionalLight position={[3, 6, 5]} intensity={2.8} />
+      <directionalLight position={[-2, 1, 8]} intensity={2.2} color="#dfe6ff" />
+      <pointLight position={[-5, 1, 3]} intensity={9} color={VIOLET} distance={16} />
       <pointLight position={[5, -2, -3]} intensity={16} color={LIME} distance={14} />
       <Environment resolution={256}>
         <Lightformer form="rect" intensity={5} position={[0, 5, 2]} scale={[10, 3, 1]} rotation-x={Math.PI / 2} />
-        <Lightformer form="rect" intensity={4} color={LIME} position={[5, 1, 0]} scale={[2, 6, 1]} rotation-y={-Math.PI / 2} />
-        <Lightformer form="rect" intensity={4.5} color={VIOLET} position={[-5, 1, 1]} scale={[2, 6, 1]} rotation-y={Math.PI / 2} />
+        <Lightformer form="rect" intensity={2.4} color={LIME} position={[5, 1, 0]} scale={[2, 6, 1]} rotation-y={-Math.PI / 2} />
+        <Lightformer form="rect" intensity={2.2} color={VIOLET} position={[-5, 1, 1]} scale={[2, 6, 1]} rotation-y={Math.PI / 2} />
         <Lightformer form="ring" intensity={3} position={[0, 0, -6]} scale={6} />
         <Lightformer form="rect" intensity={2.5} position={[0, -3, 3]} scale={[8, 1.5, 1]} rotation-x={-Math.PI / 2} />
       </Environment>
@@ -57,7 +58,7 @@ export default function EquipmentScene({ active, explode }: { active: boolean; e
         autoRotateSpeed={0.9}
         minPolarAngle={Math.PI / 3}
         maxPolarAngle={Math.PI / 1.8}
-        target={[0, -0.4, 0]}
+        target={[0, -0.3, 0]}
       />
     </Canvas>
   );
