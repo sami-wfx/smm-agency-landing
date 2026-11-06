@@ -18,7 +18,7 @@ const W = 2.6;
 const H = 1.56;
 
 /** Детерминированный генератор — текстуры одинаковы при каждом рендере (и «чистая» функция для React). */
-function rng(seed: number) {
+export function rng(seed: number) {
   let a = seed >>> 0;
   return () => {
     a = (a + 0x6d2b79f5) >>> 0;
@@ -30,7 +30,7 @@ function rng(seed: number) {
 }
 
 /** Мелкое «зерно» для матового корпуса и кожзама на хвате. */
-function useGrainTexture(scale: number) {
+export function useGrainTexture(scale: number) {
   return useMemo(() => {
     const c = document.createElement("canvas");
     c.width = c.height = 128;
@@ -51,7 +51,7 @@ function useGrainTexture(scale: number) {
 }
 
 /** Задняя стенка: расположение кнопок и колёс снято с фото реальной камеры (вид сзади). */
-function useRearTexture() {
+export function useRearTexture() {
   return useMemo(() => {
     const cw = 1280;
     const ch = Math.round((cw * H) / W);
