@@ -8,7 +8,7 @@ import { formatCounter } from "@/lib/format";
 
 /**
  * Ядро анимаций на GSAP + ScrollTrigger:
- *  - появление блоков (.reveal-group / .rise), счётчики, линия процесса, параллакс свечений.
+ *  - появление блоков (.reveal-group / .rise), переходы между блоками, счётчики, линия процесса, параллакс свечений.
  * Ничего не рендерит.
  */
 export function MotionRig() {
@@ -23,6 +23,21 @@ export function MotionRig() {
         if (reduce) return el.classList.add("in-view");
         ScrollTrigger.create({ trigger: el, start: "top 80%", once: true, onEnter: () => el.classList.add("in-view") });
       });
+
+      // переходы между блоками: следующий блок «выплывает» снизу, а уходящий мягко уменьшается и притихает
+      if (!reduce)
+        gsap.utils.toArray<HTMLElement>("main > section:not(#hero)").forEach((sec) => {
+          gsap.fromTo(
+            sec,
+            { y: 48, scale: 0.985, opacity: 0.62, transformOrigin: "50% 0%" },
+            { y: 0, scale: 1, opacity: 1, ease: "none", scrollTrigger: { trigger: sec, start: "top 104%", end: "top 58%", scrub: 0.5 } },
+          );
+          gsap.fromTo(
+            sec,
+            { scale: 1, opacity: 1, transformOrigin: "50% 100%" },
+            { scale: 0.988, opacity: 0.72, ease: "none", immediateRender: false, scrollTrigger: { trigger: sec, start: "bottom 42%", end: "bottom -5%", scrub: 0.5 } },
+          );
+        });
 
       // счётчики
       gsap.utils.toArray<HTMLElement>("[data-counter]").forEach((el) => {

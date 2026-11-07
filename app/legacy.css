@@ -436,7 +436,119 @@ html.reduced .scroll-mouse i{animation:none;opacity:1}
 @media(min-width:900px){
   .eqp{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.8fr);grid-template-rows:auto 1fr;gap:16px 24px;align-items:start}
   .eqp-stage{grid-row:1 / 3;height:clamp(520px,74svh,700px);margin:0}
+  .eqv-stage{grid-row:1 / 3}
+  .eqv-stage{grid-row:1 / 3}
   .eqp-tabs{margin-top:0;grid-template-columns:1fr 1fr}
   .eqp-card{margin-top:0;padding:26px 24px}
   .eqp-card h3{font-size:26px}
 }
+
+/* ---------- «Оборудование»: фото-просмотр ---------- */
+.eqv-stage{position:relative;height:clamp(400px,66svh,620px);border-radius:22px;overflow:hidden;border:1px solid var(--line-soft);
+  background:radial-gradient(70% 55% at 50% 38%,rgba(255,255,255,.14),transparent 70%),linear-gradient(180deg,#15151d,#0a0a0f);
+  touch-action:pan-y;user-select:none;-webkit-user-select:none;perspective:1400px;--tx:0;--ty:0;cursor:grab}
+.eqv-floor{position:absolute;left:50%;bottom:11%;width:62%;height:7%;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(closest-side,rgba(0,0,0,.65),transparent);filter:blur(10px);pointer-events:none}
+.eqv-tilt{position:absolute;inset:0;display:grid;place-items:center;
+  transform:rotateX(calc(var(--ty) * -4deg)) rotateY(calc(var(--tx) * 6deg));transition:transform .35s cubic-bezier(.22,1,.36,1);transform-style:preserve-3d}
+.eqv-slide{width:100%;height:100%;display:grid;place-items:center;transform-style:preserve-3d}
+.eqv-frame{position:relative;width:90%;height:76%;container-type:size;display:grid;place-items:center;animation:eqvFloat 6.5s ease-in-out infinite}
+.eqv-frame.zoomed{width:94%;height:84%}
+@keyframes eqvFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.eqv-photo{position:relative;width:min(100cqw,calc(100cqh * var(--r)));aspect-ratio:var(--r);transform-origin:50% 50%}
+.eqv-photo img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 22px 26px rgba(0,0,0,.55))}
+.eqv-shine{position:absolute;inset:0;pointer-events:none;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.5) 50%,transparent 58%);background-size:320% 100%;background-position:150% 0;
+  mix-blend-mode:soft-light;animation:eqvShine 6.5s ease-in-out infinite}
+@keyframes eqvShine{0%{background-position:150% 0}50%,100%{background-position:-50% 0}}
+
+/* комплект: стабилизатор и камера рядом */
+.eqv-kit{position:relative;width:100%;height:100%}
+.eqv-kit img{position:absolute;pointer-events:none;filter:drop-shadow(0 22px 26px rgba(0,0,0,.55))}
+.eqv-kit-gimbal{right:12%;bottom:9%;height:80%;width:auto;animation:eqvFloat 6.5s ease-in-out infinite}
+.eqv-kit-cam{left:6%;bottom:9%;width:56%;max-width:420px;height:auto;animation:eqvFloat 7.5s ease-in-out -2.4s infinite}
+
+/* подсказки на деталях */
+.eqv-spot{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;z-index:3;transform:scale(var(--zi,1))}
+.eqv-spot i{position:absolute;inset:7px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px rgba(10,10,10,.55)}
+.eqv-spot i::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:1.5px solid rgba(255,255,255,.7);animation:eqvPing 2.2s ease-out infinite}
+@keyframes eqvPing{0%{transform:scale(.5);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.eqv-spot.rec i{background:#ff2a2a;animation:eqvRec 1.1s steps(1) infinite}
+.eqv-spot.rec i::after{border-color:rgba(255,42,42,.8)}
+@keyframes eqvRec{50%{opacity:.35}}
+.eqv-spot span{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);white-space:nowrap;padding:6px 11px;border-radius:999px;
+  background:rgba(10,10,12,.88);border:1px solid rgba(255,255,255,.18);font:700 11px 'Manrope',sans-serif;color:#fff;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;backdrop-filter:blur(6px)}
+.eqv-spot[data-side="l"] span{left:0;transform:translateY(4px)}
+.eqv-spot[data-side="r"] span{left:auto;right:0;transform:translateY(4px)}
+.eqv-spot:hover span,.eqv-spot:focus-visible span,.eqv-spot.open span{opacity:1;transform:translateX(-50%) translateY(0)}
+.eqv-spot[data-side="l"]:hover span,.eqv-spot[data-side="l"].open span,.eqv-spot[data-side="l"]:focus-visible span{transform:translateY(0)}
+.eqv-spot[data-side="r"]:hover span,.eqv-spot[data-side="r"].open span,.eqv-spot[data-side="r"]:focus-visible span{transform:translateY(0)}
+
+/* переключатель ракурсов */
+.eqv-views{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(10,10,12,.7);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(8px);z-index:4}
+.eqv-views:empty{display:none}
+.eqv-views button{padding:8px 14px;border-radius:999px;font:700 12px 'Manrope',sans-serif;color:var(--fg2);white-space:nowrap}
+.eqv-views button.on{background:#fff;color:#0a0a0a}
+.eqv-arrow{position:absolute;top:50%;margin-top:-22px;width:44px;height:44px;border-radius:50%;background:rgba(10,10,12,.6);border:1px solid rgba(255,255,255,.16);font-size:26px;line-height:1;color:#fff;z-index:4;display:grid;place-items:center;backdrop-filter:blur(6px)}
+.eqv-arrow.l{left:10px}.eqv-arrow.r{right:10px}
+@media(max-width:560px){.eqv-arrow{display:none}.eqv-stage{height:clamp(380px,60svh,520px)}.eqv-frame{height:68%}.eqv-frame.zoomed{height:76%}}
+@media(min-width:900px){.eqv-stage{height:clamp(520px,74svh,700px)}}
+@media(prefers-reduced-motion:reduce){.eqv-frame,.eqv-kit img,.eqv-shine,.eqv-spot i::after,.eqv-spot.rec i{animation:none}.eqv-tilt{transform:none}}
+
+.eq-credit{margin-top:18px;font-size:12px;line-height:1.5;color:var(--fg3)}
+.eq-credit a{color:var(--fg2);text-decoration:underline;text-underline-offset:3px}
+.eq-credit a:hover{color:var(--lime)}
+
+/* ---------- Тарифы (обновлённые) ---------- */
+.pl{display:flex;flex-direction:column}
+.pl .badge{letter-spacing:.06em}
+.pl-strip{display:flex;gap:3px;height:4px;margin:2px 0 20px}
+.pl-strip i{flex:1;min-width:2px;border-radius:3px;background:rgba(255,255,255,.18);position:relative;overflow:hidden}
+.plan-lime .pl-strip i,.plan-cream .pl-strip i{background:rgba(10,10,10,.18)}
+.pl-strip i::after{content:"";position:absolute;inset:0;background:var(--lime);transform:scaleX(0);transform-origin:0 50%;animation:plStoryLoop calc(var(--n) * .3s + 1.6s) linear infinite;animation-delay:calc(var(--k) * .3s)}
+.plan-lime .pl-strip i::after{background:var(--bg)}
+.plan-cream .pl-strip i::after{background:var(--magenta)}
+/* сегменты Stories заполняются волной по очереди, как в Instagram */
+@keyframes plStoryLoop{0%{transform:scaleX(0)}5%{transform:scaleX(1)}80%{transform:scaleX(1)}86%,100%{transform:scaleX(0)}}
+.pl-head{display:flex;flex-direction:column;gap:6px}
+.pl-head h3{font-size:24px}
+.pl-tag{font:700 11px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--fg3)}
+.plan-lime .pl-tag,.plan-cream .pl-tag{color:rgba(10,10,10,.55)}
+.pl-hook{margin-top:12px;font-size:16px;line-height:1.45;font-weight:700;color:var(--fg)}
+.plan-lime .pl-hook,.plan-cream .pl-hook{color:var(--bg)}
+.pl .price{margin-top:18px}
+.pl-per{margin-top:6px;font:700 11px 'JetBrains Mono',monospace;letter-spacing:.03em;color:var(--fg3)}
+.plan-lime .pl-per,.plan-cream .pl-per{color:rgba(10,10,10,.55)}
+.pl-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}
+.pl-stats div{padding:12px 6px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);text-align:center;display:flex;flex-direction:column-reverse;gap:2px}
+.plan-lime .pl-stats div,.plan-cream .pl-stats div{background:rgba(10,10,10,.08);border-color:transparent}
+.pl-stats dd{font:900 24px 'Unbounded',sans-serif;line-height:1.1}
+.pl-stats dt{font-size:11px;line-height:1.25;color:var(--fg3)}
+.plan-lime .pl-stats dt,.plan-cream .pl-stats dt{color:rgba(10,10,10,.6)}
+.pl-groups{margin-top:6px;display:flex;flex-direction:column;gap:6px}
+.pl-groups{flex:1}
+@media(min-width:960px){.pricing-grid:has(.pl){align-items:stretch}}
+.pl-group{margin-top:14px}
+.pl-groups h4{font:700 11px 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);opacity:.9}
+.plan-lime .pl-groups h4{color:rgba(10,10,10,.6)}
+.plan-cream .pl-groups h4{color:var(--magenta2)}
+.pl-groups ul{margin-top:8px}
+.pl li{opacity:0;transform:translateX(-8px);transition:opacity .5s ease,transform .5s ease;transition-delay:calc(var(--i) * 45ms + .15s)}
+.pl.in-view li{opacity:1;transform:none}
+.pl li.is-new{color:var(--fg)}
+.plan-lime li.is-new,.plan-cream li.is-new{color:rgba(10,10,10,.92);font-weight:700}
+.pl li.is-new svg{color:var(--lime)}
+.plan-lime li.is-new svg{color:var(--bg)}
+.plan-cream li.is-new svg{color:var(--magenta)}
+.pl-feel{margin-top:20px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.2);display:flex;flex-direction:column;gap:4px}
+.pl-feel span{font:700 10px 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--fg3)}
+.pl-feel b{font-size:15px;line-height:1.4;font-weight:800}
+.plan-lime .pl-feel,.plan-cream .pl-feel{background:rgba(10,10,10,.07);border-color:rgba(10,10,10,.28)}
+.plan-lime .pl-feel span,.plan-cream .pl-feel span{color:rgba(10,10,10,.55)}
+.plan-lime .pl-feel b,.plan-cream .pl-feel b{color:var(--bg)}
+.pl .btn{margin-top:20px;height:64px;font-size:15px}
+.pl:hover{transform:translateY(-4px)}
+@media(min-width:960px){.pl.featured:hover{transform:translateY(-14px)}}
+.pl-help{margin:44px auto 0;max-width:640px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px}
+.pl-help p{color:var(--fg2);font-size:15px}
+@media(prefers-reduced-motion:reduce){.pl-strip i::after{animation:none;transform:scaleX(1)}.pl li{opacity:1;transform:none;transition:none}}

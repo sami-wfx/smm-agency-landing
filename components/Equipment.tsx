@@ -1,10 +1,10 @@
 "use client";
 
-import { EquipmentPhone as EquipmentViewer } from "./EquipmentPhone";
+import { EquipmentViewer } from "./EquipmentViewer";
 
 const BENEFITS = ["Кино-картинка в каждом Reels", "Слоу-мо 120 к/с для ярких акцентов", "Плавные проезды вместо «тряски с телефона»"];
 
-/** Блок «Наше оборудование»: 3D-сцена Sony FX30 + объектив + Ronin RS 4 Pro, вкладки и характеристики. */
+/** Блок «Наше оборудование»: 3D-сцена . */
 export function Equipment() {
   return (
     <section id="equipment">
@@ -35,6 +35,14 @@ export function Equipment() {
             </li>
           ))}
         </ul>
+
+        <p className="eq-credit">
+          Фото камеры и объектива: Henry Söderlund,{" "}
+          <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a> (
+          <a href="https://commons.wikimedia.org/wiki/File:Sony_FX30_with_Sony_E_10-20mm_F4_PZ_G_-_by_Henry_S%C3%B6derlund_(52445895581).jpg" target="_blank" rel="noopener noreferrer">камера</a>,{" "}
+          <a href="https://commons.wikimedia.org/wiki/File:Sony_E_10-20mm_F4_PZ_G_-_by_Henry_S%C3%B6derlund_(52177409524).jpg" target="_blank" rel="noopener noreferrer">объектив</a>
+          ). Фон удалён, кадр обрезан.
+        </p>
       </div>
     </section>
   );

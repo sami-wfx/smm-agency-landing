@@ -22,20 +22,22 @@ section#hero.hx{
 #hero .hx-giant{
   position:absolute;inset:0;z-index:4;pointer-events:none;user-select:none;
   display:flex;align-items:flex-end;justify-content:center;padding-bottom:9svh;
-  font-family:'Unbounded',sans-serif;font-weight:900;
-  font-size:clamp(34px,11.1vw,200px);line-height:1;white-space:nowrap;color:#fff;
-  letter-spacing:calc(-.01em + var(--s) * .03em);
+  font-family:'Chakra Petch','Unbounded',sans-serif;font-weight:700;
+  font-size:clamp(40px,16.4vw,360px);line-height:.95;white-space:nowrap;color:#fff;
+  letter-spacing:calc(.01em + var(--s) * .03em);
   text-shadow:0 6px 36px rgba(0,0,0,.55);
   transform:translate3d(calc(var(--mx) * -12px),calc((1 - var(--in1)) * -36svh + var(--s) * -5vh + var(--my) * -6px),0);
   transition:transform .5s cubic-bezier(.22,1,.36,1),letter-spacing .4s ease-out;
 }
-#hero .hx-l{display:inline-block;opacity:0;animation:hxLetterIn .9s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(.15s + var(--i) * .06s)}
+#hero .hx-l{display:inline-block;opacity:0;animation:hxLetterIn .9s cubic-bezier(.16,1,.3,1) both,hxScan 6.5s ease-in-out infinite;animation-delay:calc(.15s + var(--i) * .06s),calc(2s + var(--i) * .14s)}
+@keyframes hxScan{0%,72%,100%{text-shadow:0 6px 36px rgba(0,0,0,.55)}86%{text-shadow:0 6px 36px rgba(0,0,0,.55),0 0 .22em rgba(182,255,61,.75),0 0 .5em rgba(139,92,246,.4)}}
 @keyframes hxLetterIn{from{opacity:0;transform:translateY(40%)}to{opacity:1;transform:none}}
 #hero .hx-br{display:none}
 
 /* ---------- люди ---------- */
 #hero .hx-team{
-  --h:clamp(300px,min(88svh,100vw),960px);
+  /* люди как можно крупнее, но голова центрального не заходит под меню, а надпись не сжимается */
+  --h:clamp(300px,min(88svh,calc((100svh - 76px) / 1.06),100vw),1500px);
   position:absolute;left:0;right:0;bottom:0;z-index:2;margin:0;padding:0;list-style:none;
   display:flex;justify-content:center;align-items:flex-end;
 }
@@ -56,12 +58,26 @@ section#hero.hx{
 #hero .hx-glow{
   position:absolute;left:50%;top:18%;width:92%;height:82%;transform:translateX(-50%);
   background:radial-gradient(closest-side,var(--tone),transparent 74%);
-  filter:blur(40px);opacity:.3;
+  filter:blur(40px);opacity:.34;animation:hxGlow 5.6s ease-in-out infinite;animation-delay:var(--d,0s);
 }
+@keyframes hxGlow{0%,100%{transform:translateX(-50%) scale(.94);opacity:.26}50%{transform:translateX(-50%) scale(1.07);opacity:.5}}
 /* лёгкое «дыхание» */
 #hero .hx-breathe{position:absolute;inset:0;transform-origin:50% 100%;animation:hxBreathe 7s ease-in-out infinite;animation-delay:var(--d,0s)}
-@keyframes hxBreathe{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.008)}}
+@keyframes hxBreathe{0%,100%{transform:translateY(0) scale(1) rotate(-.25deg)}50%{transform:translateY(-9px) scale(1.012) rotate(.25deg)}}
 #hero .hx-breathe img{display:block;width:100%;height:100%;filter:drop-shadow(0 16px 26px rgba(0,0,0,.5));pointer-events:none;user-select:none}
+
+/* блик света, пробегающий по фигуре (маска = силуэт человека) */
+#hero .hx-shine{
+  position:absolute;inset:0;pointer-events:none;
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.6) 50%,transparent 58%);
+  background-size:320% 100%;background-position:150% 0;mix-blend-mode:soft-light;
+  animation:hxShine 7.5s ease-in-out infinite;animation-delay:var(--sd,1s);
+}
+@keyframes hxShine{0%{background-position:150% 0}42%,100%{background-position:-50% 0}}
+/* при наведении человек чуть «подсвечивается» */
+#hero .hx-breathe img{transition:filter .4s ease}
+#hero .hx-fig:hover .hx-breathe img{filter:drop-shadow(0 16px 26px rgba(0,0,0,.5)) brightness(1.07) contrast(1.03)}
 
 /* подсказка */
 #hero .hx-cue{
@@ -81,7 +97,7 @@ section#hero.hx{
   #hero .hx-giant{
     top:auto;bottom:calc(var(--hc) + 2.5svh);height:auto;padding:0 8px;
     flex-wrap:wrap;align-content:flex-end;align-items:flex-end;justify-content:center;text-align:center;
-    font-size:clamp(44px,19.5vw,120px);line-height:.98;
+    font-size:min(24.6vw,13.4svh);line-height:.95;
     transform:translate3d(0,calc((1 - var(--in1)) * 14svh),0);
   }
   #hero .hx-br{display:block;flex-basis:100%;height:0}
@@ -104,6 +120,7 @@ section#hero.hx{
 @media(prefers-reduced-motion:reduce){
   section#hero.hx{height:auto}
   #hero .hx-stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
+  #hero .hx-glow,#hero .hx-shine{display:none}
   #hero .hx-l,#hero .hx-breathe{animation:none !important}
   #hero .hx-l{opacity:1}
   #hero .hx-in{transform:none !important}

@@ -99,7 +99,25 @@ export function Hero() {
                 <div className="hx-glow" />
                 <div className="hx-breathe">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={asset(`${m.photo}.webp`)} alt="" width={720} height={960} draggable={false} decoding="async" />
+                  <img
+                    src={asset(`${m.photo}.webp`)}
+                    srcSet={`${asset(`${m.photo}.webp`)} 720w, ${asset(`${m.photo}-hd.webp`)} 1086w`}
+                    sizes="(max-width: 560px) 66vw, 48vw"
+                    alt=""
+                    width={1086}
+                    height={1448}
+                    draggable={false}
+                    decoding="async"
+                  />
+                  <span
+                    className="hx-shine"
+                    aria-hidden
+                    style={{
+                      WebkitMaskImage: `url(${asset(`${m.photo}.webp`)})`,
+                      maskImage: `url(${asset(`${m.photo}.webp`)})`,
+                      ["--sd" as string]: `${1.5 + i * 1.7}s`,
+                    } as CSSProperties}
+                  />
                 </div>
               </div>
               <span className="sr-only">{ROLES[i]}</span>
