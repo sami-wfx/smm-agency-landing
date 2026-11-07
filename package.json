@@ -7,7 +7,7 @@
     "build": "next build && node scripts/postbuild.mjs",
     "start": "next start",
     "lint": "eslint",
-    "build:pages": "NEXT_PUBLIC_BASE_PATH=/smm-agency-landing next build && node scripts/postbuild.mjs && rm -rf docs && cp -R out docs",
+    "build:pages": "NEXT_PUBLIC_BASE_PATH=/smm-agency-landing next build && NEXT_PUBLIC_BASE_PATH=/smm-agency-landing node scripts/postbuild.mjs && rm -rf docs && cp -R out docs",
     "images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
