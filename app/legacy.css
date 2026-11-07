@@ -252,10 +252,6 @@ section{position:relative;padding:88px 0;z-index:2}
 .plan-lime{background:var(--lime);color:var(--bg);border-color:transparent;box-shadow:0 0 20px rgba(184,255,60,.5),0 0 60px rgba(184,255,60,.15)}
 .plan-cream{background:var(--cream);color:var(--bg)}
 @media(min-width:960px){.plan.featured{padding:38px 30px;transform:translateY(-10px)}}
-.pricing-grid:hover .plan{opacity:.55;transform:scale(.98)}
-.pricing-grid .plan:hover{opacity:1!important;transform:scale(1)!important}
-@media(min-width:960px){.pricing-grid:hover .plan.featured{transform:translateY(-10px) scale(.98)}
-.pricing-grid .plan.featured:hover{transform:translateY(-10px) scale(1)!important}}
 .plan .badge{position:absolute;top:-13px;left:30px;padding:5px 14px;border-radius:999px;background:var(--magenta);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em}
 .plan h3{font-size:20px}
 .plan .tagline{color:var(--fg3);font-size:13px;margin-top:4px}
@@ -558,4 +554,113 @@ html.reduced .scroll-mouse i{animation:none;opacity:1}
 /* уважение к prefers-reduced-motion: у тех, кто просит меньше движения, анимации и переходы по сути выключены */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+
+/* ============================================================
+   ТАРИФЫ v3 — «Выберите свой уровень»
+   тёмные карточки, бегущий свет по рамке у «Роста», фольга у «Лидера», свет за курсором,
+   «запечатанный» результат, цена набегает. Движение — только transform / opacity.
+   ============================================================ */
+#pricing{position:relative;overflow-x:clip}
+#pricing .container{position:relative;z-index:1}
+.pl-aura{position:absolute;left:50%;top:56%;width:min(1200px,140vw);height:820px;transform:translate(-50%,-50%);pointer-events:none;z-index:0;
+  background:radial-gradient(closest-side,rgba(184,255,60,.11),rgba(139,92,246,.07) 55%,transparent 78%);animation:plAura 7s ease-in-out infinite}
+@keyframes plAura{0%,100%{opacity:.55}50%{opacity:1}}
+.pl-hint{margin-top:20px;max-width:320px;text-align:left;display:inline-flex;align-items:center;gap:10px;font:700 11px 'JetBrains Mono','JetBrains Mono Fallback',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--fg3)}
+.pl-hint i{flex:none;width:7px;height:7px;border-radius:50%;background:var(--lime);animation:badgePulse 1.6s infinite}
+
+.pricing-grid{gap:20px;margin-top:52px}
+.pricing-grid .pl{
+  --pl-bg:linear-gradient(180deg,#161618 0%,#0c0c0e 100%);--bw:1px;--spot:rgba(255,255,255,.08);
+  position:relative;isolation:isolate;overflow:hidden;
+  padding:30px 26px 26px;border:0;border-radius:26px;background:transparent;color:var(--fg);
+  box-shadow:0 40px 70px -40px rgba(0,0,0,.9);
+  transition:opacity .8s cubic-bezier(.19,1,.22,1),transform .8s cubic-bezier(.19,1,.22,1);
+}
+.pricing-grid .pl.rise{opacity:0;transform:translate3d(0,48px,0)}
+.pricing-grid .pl.featured.rise{transform:translate3d(0,70px,0) scale(.95)}
+.pricing-grid .pl.in-view{opacity:1;transform:none}
+@media(min-width:960px){
+  .pricing-grid .pl.featured{padding:40px 30px 30px}
+  .pricing-grid .pl.featured.in-view{transform:translate3d(0,-14px,0)}
+}
+@media(hover:hover){
+  .pricing-grid .pl.in-view:hover{transform:translate3d(0,-8px,0)}
+  .pricing-grid .pl.featured.in-view:hover{transform:translate3d(0,-22px,0)}
+  .pricing-grid:hover .pl.in-view{opacity:.62}
+  .pricing-grid .pl.in-view:hover{opacity:1}
+}
+/* рамка и фон: пока свет не едет — просто тонкая линия */
+.pl-edge{position:absolute;inset:0;border-radius:inherit;overflow:hidden;z-index:-1;pointer-events:none}
+.pl-edge::before{content:"";position:absolute;left:50%;top:50%;width:max(260%,1400px);aspect-ratio:1;transform:translate(-50%,-50%);background:rgba(255,255,255,.1)}
+.pl-edge::after{content:"";position:absolute;inset:var(--bw);border-radius:calc(26px - var(--bw));background:var(--pl-bg)}
+.pl-spot{position:absolute;left:0;top:0;width:440px;height:440px;margin:-220px 0 0 -220px;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(closest-side,var(--spot),transparent);opacity:0;transition:opacity .4s ease;will-change:transform}
+@media(hover:hover){.pl:hover .pl-spot{opacity:1}}
+@media(pointer:coarse){.pl-spot{display:none}}
+
+/* «Рост»: тёмный с лаймовым оттенком и бегущим светом по рамке */
+.pricing-grid .pl-grow{--pl-bg:linear-gradient(180deg,#1b1f10 0%,#0d0e09 70%);--bw:1.5px;--spot:rgba(184,255,60,.15);box-shadow:0 50px 90px -40px rgba(184,255,60,.28),0 30px 60px -40px rgba(0,0,0,.9)}
+.pl-grow .pl-edge::before{background:conic-gradient(from 0deg,rgba(184,255,60,.16) 0 55%,rgba(184,255,60,.95) 78%,#eaffb0 82%,rgba(184,255,60,.16) 92%);will-change:transform}
+.pl-grow.in-view .pl-edge::before{animation:plSpin 7s linear infinite}
+@keyframes plSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* «Лидер»: светлая «платина» с фольгой и фиолетовым светом по краю */
+.pricing-grid .plan-cream{--pl-bg:linear-gradient(180deg,#f7f0e2 0%,#e8dec9 100%);--bw:1.5px;--spot:rgba(139,92,246,.2);color:var(--bg);box-shadow:0 50px 90px -40px rgba(139,92,246,.35),0 30px 60px -40px rgba(0,0,0,.9)}
+.plan-cream .pl-edge::before{background:conic-gradient(from 0deg,rgba(139,92,246,.25) 0 50%,#8b5cf6 72%,#fff 80%,#ff5fa8 88%,rgba(139,92,246,.25) 97%);will-change:transform}
+.plan-cream.in-view .pl-edge::before{animation:plSpin 11s linear infinite reverse}
+.plan-cream::after{content:"";position:absolute;top:-10%;bottom:-10%;left:0;width:45%;pointer-events:none;z-index:-1;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);transform:translate3d(-130%,0,0) skewX(-14deg);will-change:transform}
+.plan-cream.in-view::after{animation:plFoil 8s ease-in-out 1.2s infinite}
+@keyframes plFoil{0%{transform:translate3d(-130%,0,0) skewX(-14deg)}30%,100%{transform:translate3d(320%,0,0) skewX(-14deg)}}
+
+/* уровень + «лесенка» */
+.pl-top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.pl-lvl{font:700 11px 'JetBrains Mono','JetBrains Mono Fallback',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--fg3)}
+.pl-pips{display:flex;gap:4px}
+.pl-pips i{width:20px;height:4px;border-radius:2px;background:rgba(255,255,255,.16)}
+.pl-pips i.on{background:var(--lime)}
+.plan-cream .pl-lvl{color:rgba(10,10,10,.55)}
+.plan-cream .pl-pips i{background:rgba(10,10,10,.14)}
+.plan-cream .pl-pips i.on{background:#6d3df0}
+.pricing-grid .pl .badge{position:absolute;top:20px;right:20px;left:auto;padding:6px 12px;border-radius:999px;background:var(--lime);color:var(--bg);font:800 10px 'Unbounded','Unbounded Fallback',sans-serif;letter-spacing:.06em}
+@media(max-width:560px){.pricing-grid .pl .badge{position:static;align-self:flex-start;margin-bottom:14px}}
+
+/* цена */
+.pl .price b{font-size:46px;letter-spacing:-.01em;font-variant-numeric:tabular-nums;color:#fff}
+.pl-grow .price b{color:var(--lime)}
+.plan-cream .price b{color:var(--bg)}
+.pl-strip{margin-bottom:18px}
+/* акценты внутри карточек: аккуратнее и без розового */
+.pricing-grid .pl li svg{color:rgba(255,255,255,.5)}
+.pricing-grid .pl li.is-new svg{color:var(--lime)}
+.pricing-grid .plan-cream li svg{color:rgba(10,10,10,.45)}
+.pricing-grid .plan-cream li.is-new svg{color:#6d3df0}
+.pricing-grid .plan-cream .pl-groups h4{color:#6d3df0}
+.pricing-grid .plan-cream .pl-strip i::after{background:#6d3df0}
+
+/* «запечатанный» результат */
+.pl-seal{position:relative;margin-top:14px;border-radius:14px;min-height:96px}
+.pl-seal .result{margin:0;min-height:96px;opacity:0;transform:translate3d(0,8px,0);transition:opacity .7s ease .15s,transform .7s ease .15s}
+.pl-seal.open .result{opacity:1;transform:none}
+.pl-seal-cover{position:absolute;inset:0;display:flex;align-items:center;gap:14px;padding:0 16px;text-align:left;border-radius:14px;cursor:pointer;color:var(--fg);
+  background:repeating-linear-gradient(135deg,rgba(255,255,255,.06) 0 8px,rgba(255,255,255,.02) 8px 16px),#141416;border:1px dashed rgba(255,255,255,.3);
+  transition:opacity .5s ease,transform .5s ease}
+.pl-seal-cover:hover{border-color:var(--lime)}
+.pl-seal.open .pl-seal-cover{opacity:0;pointer-events:none;transform:scale(1.04)}
+.pl-lock{flex:none;position:relative;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--lime);color:var(--bg)}
+.pl-lock::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:1.5px solid var(--lime);animation:plRing 2.4s ease-out infinite}
+@keyframes plRing{0%{transform:scale(.8);opacity:.9}100%{transform:scale(1.4);opacity:0}}
+.pl-seal-cover span{font-size:13px;line-height:1.35;color:var(--fg2)}
+.pl-seal-cover b{display:block;margin-bottom:3px;font:800 12px 'Unbounded','Unbounded Fallback',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--fg)}
+
+/* кнопки */
+.pricing-grid .pl .btn-secondary{background:#232427;color:var(--btn-paper)}
+.pricing-grid .pl .btn-secondary:hover{background:#2e3034}
+.pricing-grid .plan-cream .btn{background:var(--bg);color:#fff}
+.pricing-grid .plan-cream .btn:hover{background:#000}
+
+@media(prefers-reduced-motion:reduce){
+  .pl-aura,.pl-lock::after,.pl-grow .pl-edge::before,.plan-cream .pl-edge::before,.plan-cream::after{animation:none!important}
+  .pricing-grid .pl.rise{opacity:1;transform:none}
 }

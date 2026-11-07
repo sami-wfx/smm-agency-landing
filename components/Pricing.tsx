@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { PLANS, type Plan } from "@/lib/content";
 import { useUI } from "./UIProvider";
 
@@ -25,17 +26,76 @@ function StoryStrip({ count, plan }: { count: number; plan: Plan }) {
   );
 }
 
+const Lock = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+    <rect x="4" y="11" width="16" height="10" rx="2.5" />
+    <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+  </svg>
+);
+
+const fmt = (v: number) => Math.round(v).toLocaleString("ru-RU").replace(/\s/g, "\u00A0");
+
+/** Цена «набегает» от нуля, когда карточка попадает в экран. В HTML сразу лежит итог (поиск, без JS). */
+function PriceCount({ value }: { value: number }) {
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+    let raf = 0;
+    el.textContent = fmt(0);
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        const t0 = performance.now();
+        const tick = (t: number) => {
+          const k = Math.min(1, (t - t0 - 250) / 1300);
+          const eased = 1 - Math.pow(1 - Math.max(0, k), 4);
+          el.textContent = fmt(value * eased);
+          if (k < 1) raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [value]);
+  return <b ref={ref}>{fmt(value)}</b>;
+}
+
 function PlanCard({ p, i }: { p: Plan; i: number }) {
   const { openModal } = useUI();
+  const [sealed, setSealed] = useState(true);
+  const spot = useRef<HTMLSpanElement>(null);
   const stories = parseInt(p.stats[1].n, 10);
   let idx = 0;
   return (
     <article
-      className={`plan plan-${p.tone} pl rise${p.badge ? " featured" : ""}`}
-      style={i ? { transitionDelay: `${i * 0.1}s` } : undefined}
+      className={`plan plan-${p.tone === "lime" ? "dark" : p.tone} pl rise${p.tone === "lime" ? " pl-grow" : ""}${p.badge ? " featured" : ""}`}
+      style={i ? { transitionDelay: `${i * 0.12}s` } : undefined}
       aria-label={`Тариф «${p.name}»`}
+      onPointerMove={(e) => {
+        if (e.pointerType !== "mouse" || !spot.current) return;
+        const r = e.currentTarget.getBoundingClientRect();
+        spot.current.style.transform = `translate3d(${e.clientX - r.left}px,${e.clientY - r.top}px,0)`;
+      }}
     >
+      <span className="pl-edge" aria-hidden />
+      <span className="pl-spot" ref={spot} aria-hidden />
       {p.badge && <span className="badge">{p.badge}</span>}
+
+      <div className="pl-top" aria-hidden>
+        <span className="pl-lvl">Уровень 0{i + 1}</span>
+        <span className="pl-pips">
+          {PLANS.map((_, k) => (
+            <i key={k} className={k <= i ? "on" : undefined} />
+          ))}
+        </span>
+      </div>
 
       <StoryStrip count={stories} plan={p} />
 
@@ -46,7 +106,7 @@ function PlanCard({ p, i }: { p: Plan; i: number }) {
       <p className="pl-hook">{p.hook}</p>
 
       <div className="price">
-        <b>{p.price}</b>
+        <PriceCount value={parseInt(p.price.replace(/\D/g, ""), 10)} />
         <span>сомони / месяц</span>
       </div>
       <p className="pl-per">{p.perVideo}</p>
@@ -80,11 +140,30 @@ function PlanCard({ p, i }: { p: Plan; i: number }) {
         <span>Что вы почувствуете</span>
         <b>{p.feel}</b>
       </div>
-      <p className="result">
-        <b>Через 30 дней:</b> {p.result}
-      </p>
 
-      <button className={`btn ${p.tone === "cream" ? "btn-secondary" : "btn-primary"}`} onClick={() => openModal(p.name)}>
+      {/* «запечатанный» результат: интрига — нажмите, чтобы увидеть, что будет через 30 дней */}
+      <div className={`pl-seal${sealed ? "" : " open"}`}>
+        <p className="result" aria-hidden={sealed}>
+          <b>Через 30 дней:</b> {p.result}
+        </p>
+        <button
+          type="button"
+          className="pl-seal-cover"
+          aria-expanded={!sealed}
+          tabIndex={sealed ? 0 : -1}
+          onClick={() => setSealed(false)}
+        >
+          <i className="pl-lock">
+            <Lock />
+          </i>
+          <span>
+            <b>Запечатано</b>
+            Что изменится через 30 дней? Нажмите
+          </span>
+        </button>
+      </div>
+
+      <button className={`btn ${p.badge ? "btn-primary" : "btn-secondary"}`} onClick={() => openModal(p.name)}>
         {p.cta}
       </button>
     </article>
@@ -95,14 +174,18 @@ export function Pricing() {
   const { openModal } = useUI();
   return (
     <section id="pricing">
+      <div className="pl-aura" aria-hidden />
       <div className="container">
         <div className="reveal-group" style={{ textAlign: "center" }}>
           <span className="eyebrow reveal"><span className="reveal-inner">Тарифы</span></span>
           <h2 className="h2 reveal">
-            <span className="reveal-inner">Каким станет ваш бренд через 30 дней?</span>
+            <span className="reveal-inner">Выберите свой уровень</span>
           </h2>
           <p className="lede rise" style={{ margin: "14px auto 0" }}>
-            Команда, кинокамера и система в одном пакете. Вы платите раз в месяц, а контент работает на вас каждый день.
+            Не набор услуг, а система: стратегия, съёмка на кинокамеру и продвижение в одном пакете. Чем выше уровень — тем меньше вы делаете сами.
+          </p>
+          <p className="pl-hint rise">
+            <i /> В каждом тарифе есть запечатанный результат — откройте его
           </p>
         </div>
 
