@@ -1,6 +1,4 @@
-:HL["/smm-agency-landing/_next/static/chunks/14mdoo34iok9x.css","style"]
+:HL["/smm-agency-landing/_next/static/chunks/1qgdnxc3_3kgd.css","style"]
 :HC["/",""]
-:HL["https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800;900&family=Nunito:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap&subset=cyrillic,latin","style"]
-:HL["/smm-agency-landing/logo-triocrash.png","image"]
 1:[["children",{"s":"__PAGE__","h":160}]]
-0:{"b":"cm-9JDAUByH_6Tlw70CO_","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"l_oLNA49cIzCENE40WUS8","t":{"t":{"s":"","h":80,"c":"$Q1"}}}

@@ -1,0 +1,16 @@
+# Заголовки кеша для Netlify / Cloudflare Pages (читаются из корня публикуемой папки).
+# GitHub Pages эти файлы игнорирует — см. README, раздел «Производительность».
+
+# HTML — всегда проверять свежесть
+/
+  Cache-Control: public, max-age=0, must-revalidate
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Файлы с хешем в имени (JS, CSS, шрифты, картинки) — навсегда
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Прочее в корне (favicon, данные) — сутки
+/favicon.png
+  Cache-Control: public, max-age=86400

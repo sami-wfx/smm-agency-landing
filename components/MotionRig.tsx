@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { setSmoother } from "@/lib/smoother";
 import { formatCounter } from "@/lib/format";
 
@@ -13,6 +11,30 @@ import { formatCounter } from "@/lib/format";
  */
 export function MotionRig() {
   useEffect(() => {
+    let cancelled = false;
+    let cleanup: (() => void) | undefined;
+    // GSAP — отдельным чанком, после первой отрисовки: не блокирует загрузку и гидрацию
+    const start = () =>
+      Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([{ gsap }, { ScrollTrigger }]) => {
+        if (!cancelled) cleanup = run(gsap, ScrollTrigger);
+      });
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
+    if (w.requestIdleCallback) w.requestIdleCallback(() => void start(), { timeout: 1200 });
+    else setTimeout(() => void start(), 300);
+    return () => {
+      cancelled = true;
+      cleanup?.();
+    };
+  }, []);
+
+  return null;
+}
+
+type GSAP = typeof import("gsap").gsap;
+type ST = typeof import("gsap/ScrollTrigger").ScrollTrigger;
+
+function run(gsap: GSAP, ScrollTrigger: ST) {
+  {
     gsap.registerPlugin(ScrollTrigger);
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     document.documentElement.classList.toggle("reduced", reduce);
@@ -84,6 +106,7 @@ export function MotionRig() {
 
     const refresh = () => ScrollTrigger.refresh();
     window.addEventListener("load", refresh);
+    if (document.readyState === "complete") refresh();
     document.fonts?.ready.then(refresh);
 
     return () => {
@@ -91,7 +114,5 @@ export function MotionRig() {
       ctx.revert();
       setSmoother(null);
     };
-  }, []);
-
-  return null;
+  }
 }

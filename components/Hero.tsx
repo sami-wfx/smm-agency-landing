@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useRef, type CSSProperties } from "react";
-import { asset } from "@/lib/asset";
+import { IMG } from "@/lib/images";
 import { TEAM, TONES } from "@/lib/team";
 
 /**
@@ -49,6 +49,15 @@ export function Hero() {
     const request = () => {
       if (!raf) raf = requestAnimationFrame(apply);
     };
+    // пока идёт прокрутка, декоративные бесконечные анимации (блик, «дыхание») ставятся на паузу —
+    // освобождаем кадры под сам выход людей: на телефоне именно они давали лаги
+    let idle = 0;
+    const onScroll = () => {
+      st.classList.add("is-scrolling");
+      clearTimeout(idle);
+      idle = window.setTimeout(() => st.classList.remove("is-scrolling"), 180);
+      request();
+    };
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse" || reduce.matches) return;
       st.style.setProperty("--mx", ((e.clientX / window.innerWidth) * 2 - 1).toFixed(3));
@@ -56,12 +65,13 @@ export function Hero() {
     };
 
     apply();
-    window.addEventListener("scroll", request, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", request);
     window.addEventListener("pointermove", onMove, { passive: true });
     reduce.addEventListener("change", request);
     return () => {
-      window.removeEventListener("scroll", request);
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(idle);
       window.removeEventListener("resize", request);
       window.removeEventListener("pointermove", onMove);
       reduce.removeEventListener("change", request);
@@ -75,7 +85,7 @@ export function Hero() {
         <div className="hx-giant" aria-hidden>
           {WORD.map((ch, i) => (
             <Fragment key={i}>
-              <span className="hx-l" style={{ ["--i" as string]: i } as CSSProperties}>
+              <span className="hx-l" data-c={ch} style={{ ["--i" as string]: i } as CSSProperties}>
                 {ch}
               </span>
               {/* на телефоне надпись переносится: TRIO / CRASH — так она крупнее */}
@@ -100,21 +110,24 @@ export function Hero() {
                 <div className="hx-breathe">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={asset(`${m.photo}.webp`)}
-                    srcSet={`${asset(`${m.photo}.webp`)} 720w, ${asset(`${m.photo}-hd.webp`)} 1086w`}
+                    src={IMG.team[m.photo].src}
+                    srcSet={IMG.team[m.photo].srcSet}
                     sizes="(max-width: 560px) 66vw, 48vw"
                     alt=""
-                    width={1086}
-                    height={1448}
+                    width={IMG.team[m.photo].width}
+                    height={IMG.team[m.photo].height}
                     draggable={false}
+                    // главный (первый выходящий) кадр hero — самый приоритетный; остальные тоже сразу, но без повышенного приоритета
+                    loading="eager"
+                    fetchPriority={i === 0 ? "high" : "auto"}
                     decoding="async"
                   />
                   <span
                     className="hx-shine"
                     aria-hidden
                     style={{
-                      WebkitMaskImage: `url(${asset(`${m.photo}.webp`)})`,
-                      maskImage: `url(${asset(`${m.photo}.webp`)})`,
+                      WebkitMaskImage: `url(${IMG.team[m.photo].src})`,
+                      maskImage: `url(${IMG.team[m.photo].src})`,
                       ["--sd" as string]: `${1.5 + i * 1.7}s`,
                     } as CSSProperties}
                   />

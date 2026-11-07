@@ -1,6 +1,10 @@
 "use client";
 
-import { EquipmentViewer } from "./EquipmentViewer";
+import dynamic from "next/dynamic";
+import { LazyOnView } from "./LazyOnView";
+
+// просмотрщик (Motion + фото) — отдельный чанк, монтируется за ~900px до экрана
+const EquipmentViewer = dynamic(() => import("./EquipmentViewer").then((m) => m.EquipmentViewer), { ssr: false });
 
 const BENEFITS = ["Кино-картинка в каждом Reels", "Слоу-мо 120 к/с для ярких акцентов", "Плавные проезды вместо «тряски с телефона»"];
 
@@ -20,9 +24,7 @@ export function Equipment() {
           </p>
         </div>
 
-        <div className="eq-view">
-          <EquipmentViewer />
-        </div>
+        <LazyOnView className="eq-view">{() => <EquipmentViewer />}</LazyOnView>
 
         <ul className="rise mt-6 flex flex-wrap gap-3">
           {BENEFITS.map((b) => (

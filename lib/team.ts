@@ -1,9 +1,9 @@
-/** Команда (порядок = порядок в Hero). Фото — в /public/team. */
+/** Команда (порядок = порядок в Hero). Фото — в /assets/team, см. lib/images.ts. */
 export const TEAM = [
   // слева (выходит первым) → в центре → справа; цвет свечения привязан к месту
-  { key: "production", tone: "purple", photo: "team/team-2" },
-  { key: "editing", tone: "lime", photo: "team/team-3" },
-  { key: "promotion", tone: "pink", photo: "team/team-1" },
+  { key: "production", tone: "purple", photo: "team-2" },
+  { key: "editing", tone: "lime", photo: "team-3" },
+  { key: "promotion", tone: "pink", photo: "team-1" },
 ] as const;
 
 export const TONES = {

@@ -2,7 +2,6 @@ import { UIProvider } from "@/components/UIProvider";
 import { BgFx } from "@/components/BgFx";
 import { CursorGlow } from "@/components/CursorGlow";
 import { Nav } from "@/components/Nav";
-import { Drawer } from "@/components/Drawer";
 import { Hero } from "@/components/Hero";
 import { Marquee } from "@/components/Marquee";
 import { Equipment } from "@/components/Equipment";
@@ -12,7 +11,7 @@ import { Pricing } from "@/components/Pricing";
 import { Process } from "@/components/Process";
 import { Contacts } from "@/components/Contacts";
 import { Footer } from "@/components/Footer";
-import { LeadModal } from "@/components/LeadModal";
+import { Overlays } from "@/components/Overlays";
 import { MotionRig } from "@/components/MotionRig";
 import { SkipLink } from "@/components/SkipLink";
 
@@ -23,7 +22,6 @@ export default function Home() {
       <BgFx />
       <CursorGlow />
       <Nav />
-      <Drawer />
       <div id="smooth-wrapper">
         <div id="smooth-content">
           <main id="top" tabIndex={-1}>
@@ -39,7 +37,7 @@ export default function Home() {
           <Footer />
         </div>
       </div>
-      <LeadModal />
+      <Overlays />
       <MotionRig />
     </UIProvider>
   );

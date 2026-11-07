@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# исходники картинок в полном качестве — только локально, в сборку не попадают
+/originals/

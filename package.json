@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/postbuild.mjs",
     "start": "next start",
     "lint": "eslint",
-    "build:pages": "NEXT_PUBLIC_BASE_PATH=/smm-agency-landing next build && rm -rf docs && cp -R out docs"
+    "build:pages": "NEXT_PUBLIC_BASE_PATH=/smm-agency-landing next build && node scripts/postbuild.mjs && rm -rf docs && cp -R out docs",
+    "images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

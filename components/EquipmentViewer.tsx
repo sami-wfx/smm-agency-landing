@@ -2,18 +2,18 @@
 
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { asset } from "@/lib/asset";
+import { IMG, type Pic } from "@/lib/images";
 
 /**
  * «Наше оборудование» — фото-реалистичный просмотр: вырезанные студийные фото Sony FX30, объектива и Ronin RS 4 Pro.
  * Ракурсы переключаются поворотом (свайп / стрелки / кнопки), фото слегка наклоняются за курсором и «дышат»,
- * по ним пробегает блик, а на деталях стоят подсказки. Файлы — в /public/equipment.
+ * по ним пробегает блик, а на деталях стоят подсказки. Файлы — в /assets/equipment (оптимизируются scripts/optimize-images.mjs).
  */
 type Spot = { x: number; y: number; label: string; rec?: boolean };
 type View = {
   id: string;
   label: string;
-  src: string;
+  img: Pic;
   ratio: number; // ширина / высота снимка
   spots: Spot[];
   zoom?: { x: number; y: number; s: number }; // приближение к точке (в % снимка)
@@ -23,7 +23,7 @@ type Tab = "all" | "camera" | "lens" | "gimbal";
 const VIEWS: Record<Exclude<Tab, "all">, View[]> = {
   camera: [
     {
-      id: "c34", label: "3/4", src: "equipment/fx30-34-hd.webp", ratio: 1900 / 1147,
+      id: "c34", label: "3/4", img: IMG.fx34, ratio: 1900 / 1147,
       spots: [
         { x: 37, y: 60, label: "Объектив Sony E PZ 10–20 mm F4 G" },
         { x: 75, y: 85, label: "Кнопка REC", rec: true },
@@ -34,7 +34,7 @@ const VIEWS: Record<Exclude<Tab, "all">, View[]> = {
       ],
     },
     {
-      id: "cfront", label: "Спереди", src: "equipment/fx30-front.webp", ratio: 629 / 386,
+      id: "cfront", label: "Спереди", img: IMG.fxFront, ratio: 629 / 386,
       spots: [
         { x: 57, y: 53, label: "Байонет Sony E и матрица Super 35" },
         { x: 90, y: 88, label: "Кнопка REC", rec: true },
@@ -42,7 +42,7 @@ const VIEWS: Record<Exclude<Tab, "all">, View[]> = {
       ],
     },
     {
-      id: "ctop", label: "Сверху", src: "equipment/fx30-top.webp", ratio: 655 / 562,
+      id: "ctop", label: "Сверху", img: IMG.fxTop, ratio: 655 / 562,
       spots: [
         { x: 40, y: 20, label: "E 4/PZ 10–20 G" },
         { x: 73, y: 70, label: "Кнопка REC", rec: true },
@@ -53,7 +53,7 @@ const VIEWS: Record<Exclude<Tab, "all">, View[]> = {
   ],
   lens: [
     {
-      id: "lsolo", label: "Объектив", src: "equipment/lens-solo.webp", ratio: 1100 / 1785,
+      id: "lsolo", label: "Объектив", img: IMG.lens, ratio: 1100 / 1785,
       spots: [
         { x: 50, y: 20, label: "Бленда с лепестками" },
         { x: 50, y: 37, label: "Кольцо ручного зума" },
@@ -64,7 +64,7 @@ const VIEWS: Record<Exclude<Tab, "all">, View[]> = {
       ],
     },
     {
-      id: "lfront", label: "На камере", src: "equipment/fx30-34-hd.webp", ratio: 1900 / 1147, zoom: { x: 37, y: 60, s: 1.55 },
+      id: "lfront", label: "На камере", img: IMG.fx34, ratio: 1900 / 1147, zoom: { x: 37, y: 60, s: 1.55 },
       spots: [
         { x: 37, y: 60, label: "Передняя линза, фильтр Ø62 мм" },
         { x: 59, y: 46, label: "Кольцо зума (Power Zoom)" },
@@ -72,7 +72,7 @@ const VIEWS: Record<Exclude<Tab, "all">, View[]> = {
       ],
     },
     {
-      id: "ltop", label: "Сверху", src: "equipment/fx30-top.webp", ratio: 655 / 562, zoom: { x: 40, y: 24, s: 1.35 },
+      id: "ltop", label: "Сверху", img: IMG.fxTop, ratio: 655 / 562, zoom: { x: 40, y: 24, s: 1.35 },
       spots: [
         { x: 40, y: 20, label: "E 4/PZ 10–20 G" },
         { x: 20, y: 28, label: "Переключатели на объективе" },
@@ -81,7 +81,7 @@ const VIEWS: Record<Exclude<Tab, "all">, View[]> = {
   ],
   gimbal: [
     {
-      id: "gfront", label: "Спереди", src: "equipment/rs4-front.webp", ratio: 407 / 729,
+      id: "gfront", label: "Спереди", img: IMG.rsFront, ratio: 407 / 729,
       spots: [
         { x: 9, y: 17, label: "Мотор наклона" },
         { x: 42, y: 31, label: "Пластина быстрого крепления" },
@@ -91,7 +91,7 @@ const VIEWS: Record<Exclude<Tab, "all">, View[]> = {
       ],
     },
     {
-      id: "gleft", label: "Сбоку", src: "equipment/rs4-left.webp", ratio: 310 / 428,
+      id: "gleft", label: "Сбоку", img: IMG.rsLeft, ratio: 310 / 428,
       spots: [
         { x: 59, y: 24, label: "Карбоновый рычаг RONIN" },
         { x: 12, y: 37, label: "Боковая рукоять" },
@@ -99,7 +99,7 @@ const VIEWS: Record<Exclude<Tab, "all">, View[]> = {
       ],
     },
     {
-      id: "gright", label: "С другой стороны", src: "equipment/rs4-right.webp", ratio: 317 / 455,
+      id: "gright", label: "С другой стороны", img: IMG.rsRight, ratio: 317 / 455,
       spots: [
         { x: 52, y: 67, label: "Рукоять" },
         { x: 83, y: 36, label: "Боковая рукоять" },
@@ -143,7 +143,7 @@ const INFO: Record<Tab, { tag: string; title: string; text: string; specs: [stri
 };
 
 function Photo({ v, active }: { v: View; active: string | null }) {
-  const src = asset(v.src);
+  const { img } = v;
   const z = v.zoom;
   return (
     <div
@@ -154,8 +154,18 @@ function Photo({ v, active }: { v: View; active: string | null }) {
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" draggable={false} />
-      <span className="eqv-shine" style={{ WebkitMaskImage: `url(${src})`, maskImage: `url(${src})` }} />
+      <img
+        src={img.src}
+        srcSet={img.srcSet}
+        sizes="(max-width: 900px) 92vw, 760px"
+        width={img.width}
+        height={img.height}
+        alt=""
+        draggable={false}
+        loading="lazy"
+        decoding="async"
+      />
+      <span className="eqv-shine" style={{ WebkitMaskImage: `url(${img.src})`, maskImage: `url(${img.src})` }} />
       {v.spots.map((s) => (
         <button
           key={s.label}
@@ -250,9 +260,9 @@ export function EquipmentViewer() {
               ) : (
                 <div className="eqv-kit">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="eqv-kit-gimbal" src={asset("equipment/rs4-front.webp")} alt="DJI Ronin RS 4 Pro" draggable={false} />
+                  <img className="eqv-kit-gimbal" src={IMG.rsFront.src} width={IMG.rsFront.width} height={IMG.rsFront.height} alt="DJI Ronin RS 4 Pro" draggable={false} loading="lazy" decoding="async" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="eqv-kit-cam" src={asset("equipment/fx30-34-hd.webp")} alt="Sony FX30 с объективом" draggable={false} />
+                  <img className="eqv-kit-cam" src={IMG.fx34.src} srcSet={IMG.fx34.srcSet} sizes="(max-width: 560px) 56vw, 420px" width={IMG.fx34.width} height={IMG.fx34.height} alt="Sony FX30 с объективом" draggable={false} loading="lazy" decoding="async" />
                 </div>
               )}
             </motion.div>

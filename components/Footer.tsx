@@ -1,4 +1,4 @@
-import { asset } from "@/lib/asset";
+import { IMG } from "@/lib/images";
 import { CHANNEL_LABEL, channelLink, channels, leadMessage, type Channel } from "@/lib/site";
 
 const ICON: Record<Channel, React.ReactNode> = {
@@ -17,7 +17,7 @@ export function Footer() {
     <footer>
       <div className="container row">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={asset("logo-triocrash.png")} alt="TRIOCRASH" width={126} height={20} />
+        <img src={IMG.logo.src} alt="TRIOCRASH" width={IMG.logo.width} height={IMG.logo.height} loading="lazy" decoding="async" />
         <p className="copy">© {new Date().getFullYear()} TRIOCRASH. Reels-продакшн, Таджикистан.</p>
         {list.length > 0 && (
           <div className="social">

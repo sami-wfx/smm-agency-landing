@@ -1,7 +1,7 @@
 "use client";
 
 import { NAV_LINKS } from "@/lib/content";
-import { asset } from "@/lib/asset";
+import { IMG } from "@/lib/images";
 import { AnchorLink } from "./AnchorLink";
 import { useUI } from "./UIProvider";
 
@@ -12,7 +12,7 @@ export function Nav() {
       <div className="container bar">
         <AnchorLink href="#top" className="logo">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={asset("logo-triocrash.png")} alt="TRIOCRASH — на главную" width={152} height={24} />
+          <img src={IMG.logo.src} alt="TRIOCRASH — на главную" width={IMG.logo.width} height={IMG.logo.height} fetchPriority="high" decoding="async" />
         </AnchorLink>
         <div className="links">
           {NAV_LINKS.map((l) => (

@@ -11,6 +11,6 @@
   --color-bg: #0a0a0a;
   --color-lime: #b8ff3c;
   --color-violet: #8b5cf6;
-  --font-display: "Unbounded", "Manrope", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Unbounded", "Unbounded Fallback", "Manrope", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "JetBrains Mono Fallback", ui-monospace, monospace;
 }

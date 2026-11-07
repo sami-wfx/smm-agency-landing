@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { NAV_LINKS } from "@/lib/content";
-import { asset } from "@/lib/asset";
+import { IMG } from "@/lib/images";
 import { AnchorLink } from "./AnchorLink";
 import { useUI } from "./UIProvider";
 
@@ -20,7 +20,7 @@ export function Drawer() {
         >
           <div className="top">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={asset("logo-triocrash.png")} alt="TRIOCRASH" width={139} height={22} />
+            <img src={IMG.logo.src} alt="TRIOCRASH" width={IMG.logo.width} height={IMG.logo.height} loading="lazy" decoding="async" />
             <button className="close" aria-label="Закрыть меню" onClick={closeDrawer}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M18 6 6 18M6 6l12 12" />

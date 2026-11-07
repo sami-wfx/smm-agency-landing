@@ -13,10 +13,10 @@ function CaseCard({ c, i }: { c: CaseItem; i: number }) {
       {c.beforeImage && c.afterImage && (
         <div className="ba">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="ba-after" src={asset(c.afterImage)} alt="После" loading="lazy" />
+          <img className="ba-after" src={asset(c.afterImage)} alt="После" loading="lazy" decoding="async" />
           <div className="ba-before-wrap" style={{ width: `${pos}%` }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="ba-before" src={asset(c.beforeImage)} alt="До" loading="lazy" />
+            <img className="ba-before" src={asset(c.beforeImage)} alt="До" loading="lazy" decoding="async" />
           </div>
           <div className="ba-divider" style={{ left: `${pos}%` }} />
           <span className="ba-tag ba-tag-before">До</span>
