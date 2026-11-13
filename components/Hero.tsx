@@ -122,15 +122,6 @@ export function Hero() {
                     fetchPriority={i === 0 ? "high" : "auto"}
                     decoding="async"
                   />
-                  <span
-                    className="hx-shine"
-                    aria-hidden
-                    style={{
-                      WebkitMaskImage: `url(${IMG.team[m.photo].src})`,
-                      maskImage: `url(${IMG.team[m.photo].src})`,
-                      ["--sd" as string]: `${1.5 + i * 1.7}s`,
-                    } as CSSProperties}
-                  />
                 </div>
               </div>
               <span className="sr-only">{ROLES[i]}</span>
