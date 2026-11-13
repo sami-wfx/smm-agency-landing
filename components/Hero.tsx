@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useRef, type CSSProperties } from "react";
 import { IMG } from "@/lib/images";
 import { TEAM, TONES } from "@/lib/team";
+import { AnchorLink } from "./AnchorLink";
 
 /**
  * Hero «Команда в кадре» — спокойная версия.
@@ -35,6 +36,7 @@ export function Hero() {
         st.style.setProperty("--p", "0");
         st.style.setProperty("--s", "0");
         [0, 1, 2].forEach((i) => st.style.setProperty(`--in${i}`, "1"));
+        st.classList.add("is-final");
         return;
       }
       const r = el.getBoundingClientRect();
@@ -44,7 +46,10 @@ export function Hero() {
       [0, 1, 2].forEach((i) => {
         st.style.setProperty(`--in${i}`, back(clamp01((p - 0.04 - i * 0.2) / 0.3)).toFixed(4));
       });
-      st.style.setProperty("--s", clamp01((p - 0.74) / 0.26).toFixed(4));
+      const fin = clamp01((p - 0.74) / 0.26);
+      st.style.setProperty("--s", fin.toFixed(4));
+      // финал сцены: появляются подпись, кнопка и роли
+      st.classList.toggle("is-final", fin > 0.55);
     };
     const request = () => {
       if (!raf) raf = requestAnimationFrame(apply);
@@ -154,10 +159,21 @@ export function Hero() {
                   />
                 </div>
               </div>
+              <span className="hx-role" aria-hidden>
+                {ROLES[i]}
+              </span>
               <span className="sr-only">{ROLES[i]}</span>
             </li>
           ))}
         </ul>
+
+        <div className="hx-tag">
+          <p className="hx-tag-t">Reels-продюсеры и бренд-продюсеры из Таджикистана. Снимаем на Sony FX30.</p>
+          <AnchorLink href="#cases" className="hx-tag-a">
+            Смотреть кейсы
+            <i aria-hidden>→</i>
+          </AnchorLink>
+        </div>
 
         <div className="hx-cue" aria-hidden>
           <i />

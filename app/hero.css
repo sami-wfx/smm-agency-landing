@@ -27,7 +27,7 @@ section#hero.hx{
   letter-spacing:.025em;
   text-shadow:0 6px 36px rgba(0,0,0,.55);
   /* «разъезд» букв при скролле — через scaleX (transform), а не letter-spacing: без пересчёта раскладки текста */
-  transform:translate3d(calc(var(--mx) * -12px),calc((1 - var(--in1)) * -36svh + var(--s) * -5vh + var(--my) * -6px),0) scaleX(calc(1 + var(--s) * .028));
+  transform:translate3d(calc(var(--mx) * -12px),calc((1 - var(--in1)) * -36svh + var(--s) * -13vh + var(--my) * -6px),0) scaleX(calc(1 + var(--s) * .028));
   transition:transform .5s cubic-bezier(.22,1,.36,1);
 }
 /* буквы плавно «качаются» волной (как люди парят), а у курсора слегка вырастают (--lift ставит Hero.tsx) */
@@ -85,6 +85,32 @@ section#hero.hx{
 #hero .hx-breathe img{transition:filter .4s ease}
 #hero .hx-fig:hover .hx-breathe img{filter:drop-shadow(0 16px 26px rgba(0,0,0,.5)) brightness(1.07) contrast(1.03)}
 
+/* ---------- финал сцены: подпись, ссылка, роли (класс .is-final ставит Hero.tsx) ---------- */
+#hero .hx-tag{
+  position:absolute;left:0;right:0;bottom:0;z-index:5;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+  padding:0 clamp(16px,3vw,48px) clamp(16px,3.4svh,34px);
+  opacity:0;transform:translateY(12px);pointer-events:none;
+  transition:opacity .6s ease,transform .6s cubic-bezier(.22,1,.36,1);
+}
+#hero .hx-stage.is-final .hx-tag{opacity:1;transform:none;pointer-events:auto}
+#hero .hx-tag-t{margin:0;max-width:430px;font:500 clamp(14px,1.3vw,17px)/1.45 'Manrope','Manrope Fallback',sans-serif;color:rgba(255,255,255,.9);text-shadow:0 1px 14px rgba(0,0,0,.9)}
+#hero .hx-tag-a{
+  display:inline-flex;align-items:center;gap:10px;padding-bottom:3px;white-space:nowrap;
+  font:700 14px 'Unbounded','Unbounded Fallback',sans-serif;color:#fff;text-decoration:none;text-shadow:0 1px 14px rgba(0,0,0,.9);
+  border-bottom:1px solid rgba(255,255,255,.55);transition:color .2s ease,border-color .2s ease;
+}
+#hero .hx-tag-a i{font-style:normal;transition:transform .25s ease}
+#hero .hx-tag-a:hover{color:var(--lime);border-color:var(--lime)}
+#hero .hx-tag-a:hover i{transform:translateX(4px)}
+#hero .hx-role{
+  position:absolute;left:50%;top:39%;z-index:3;transform:translate(-50%,6px);white-space:nowrap;
+  font:600 13px 'Manrope','Manrope Fallback',sans-serif;letter-spacing:.04em;color:#fff;
+  text-shadow:0 1px 12px rgba(0,0,0,.85);opacity:0;transition:opacity .5s ease .1s,transform .5s ease .1s;
+}
+#hero .hx-stage.is-final .hx-role{opacity:1;transform:translate(-50%,0)}
+#hero .hx-fig:nth-child(2) .hx-role{transition-delay:.25s}
+#hero .hx-fig:nth-child(3) .hx-role{transition-delay:.4s}
+
 /* подсказка */
 #hero .hx-cue{
   position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:5;
@@ -119,6 +145,10 @@ section#hero.hx{
   #hero .hx-fig:nth-child(3) .hx-in{transform:translate3d(0,calc((1 - var(--in1)) * 108%),0)}
   #hero .hx-breathe img{filter:drop-shadow(0 10px 16px rgba(0,0,0,.45))}
   #hero .hx-cue{display:none}
+  #hero .hx-tag{flex-direction:column;align-items:center;gap:12px;text-align:center;padding-bottom:max(16px,2.6svh)}
+  #hero .hx-tag-t{font-size:14px;max-width:300px}
+  #hero .hx-tag-a{font-size:13px}
+  #hero .hx-role{display:none}
 }
 
 /* без анимации: статичный кадр, без пина */
@@ -130,4 +160,6 @@ section#hero.hx{
   #hero .hx-in{transform:none !important}
   #hero .hx-giant{transition:none;letter-spacing:-.01em;transform:none}
   #hero .hx-cue{display:none}
+  #hero .hx-tag,#hero .hx-role{opacity:1;transform:none;transition:none}
+  #hero .hx-role{transform:translateX(-50%)}
 }
