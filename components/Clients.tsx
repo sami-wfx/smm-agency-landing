@@ -27,7 +27,7 @@ function Chip({ c }: { c: ClientItem }) {
     <li className="client">
       {c.logo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={asset(c.logo)} alt="" width={40} height={40} loading="lazy" decoding="async" draggable={false} />
+        <img src={asset(c.logo)} alt="" width={48} height={48} loading="lazy" decoding="async" draggable={false} />
       ) : (
         <span className="client-ph" aria-hidden>
           {c.name.trim().charAt(0).toUpperCase()}
