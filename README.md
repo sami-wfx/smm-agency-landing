@@ -19,6 +19,7 @@ GitHub Pages раздаёт папку `docs/` ветки `main`.
 ## Где что менять
 - Тексты, тарифы, услуги, этапы — `lib/content.ts`
 - Кейсы — `data/cases.json`
+- Блок «Наши клиенты» — `data/clients.json` (`[{"name":"Название","logo":"clients/файл.png"}, …]`), логотипы кладутся в `public/clients/` (квадрат ≈ 96×96 px, PNG/JPG). Пока список пуст, блок на сайте скрыт.
 - Заголовок первого экрана — `components/Hero.tsx`
 - 3D-сцена — `components/three/HeroScene.tsx`
 - Стили — `app/legacy.css` (прежние), классы Tailwind в новых компонентах

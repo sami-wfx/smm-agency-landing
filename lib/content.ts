@@ -32,6 +32,13 @@ export type CaseItem = {
   youtubeUrl?: string;
 };
 
+export type ClientItem = {
+  /** Название на плашке (например, «Яндекс Еда» или ник блогера). */
+  name: string;
+  /** Файл логотипа или аватара в /public/clients/, например "clients/zloy.png". Без файла — кружок с буквой. */
+  logo?: string;
+};
+
 export const NAV_LINKS = [
   { href: "#services", label: "Услуги" },
   { href: "#equipment", label: "Оборудование" },

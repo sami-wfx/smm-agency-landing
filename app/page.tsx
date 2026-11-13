@@ -8,6 +8,7 @@ import { Marquee } from "@/components/Marquee";
 import { Equipment } from "@/components/Equipment";
 import { Services } from "@/components/Services";
 import { Cases } from "@/components/Cases";
+import { Clients } from "@/components/Clients";
 import { Pricing } from "@/components/Pricing";
 import { Process } from "@/components/Process";
 import { Contacts } from "@/components/Contacts";
@@ -32,6 +33,7 @@ export default function Home() {
             <Equipment />
             <Services />
             <Cases />
+            <Clients />
             <Pricing />
             <Process />
             <Contacts />
