@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Космос — фиксированный фон всей страницы: туманность (CSS, space.css) + один 2D-canvas со звёздами.
+ * Космос — фиксированный фон всей страницы: один 2D-canvas со звёздами (без цветных пятен-туманностей).
  * — без WebGL и тяжёлых фильтров; цикл стоит, пока вкладка скрыта;
  * — глубина: дальние звёзды двигаются медленнее (мышь + прокрутка страницы);
  * — раз в 6–10 секунд пролетает одна падающая звезда (не во время прокрутки);
@@ -119,16 +119,12 @@ export function SpaceBg() {
       if (!W || !H) return;
       ctx!.clearRect(0, 0, W, H);
       const animate = !reduce.matches;
-      // прокрутка страницы: px — для звёзд, 0…1 — для туманности (она остаётся в пределах экрана)
+      // прокрутка страницы (px) — для параллакса звёзд
       let sy = 0;
       if (animate) {
         sy = window.scrollY;
-        const range = document.documentElement.scrollHeight - window.innerHeight;
-        const p = range > 0 ? Math.min(1, Math.max(0, sy / range)) : 0;
         mx += (tx - mx) * 0.06;
         my += (ty - my) * 0.06;
-        box!.style.setProperty("--mx", mx.toFixed(3));
-        box!.style.setProperty("--p", p.toFixed(4));
       }
       const ox = mx * -16;
       const oy = my * -10 - sy * 0.1; // звёзды уплывают медленнее контента; края замыкаются через wrapN
@@ -236,7 +232,15 @@ export function SpaceBg() {
       tx = (e.clientX / window.innerWidth) * 2 - 1;
       ty = (e.clientY / window.innerHeight) * 2 - 1;
     };
+    // пока на экране Hero — прежние цветные пятна сайта (.bg-fx .glow) гасим: фон там чисто звёздный
+    const hero = document.getElementById("hero");
+    const root = document.documentElement;
+    const syncHero = () => {
+      if (!hero) return;
+      root.classList.toggle("in-hero", hero.getBoundingClientRect().bottom > window.innerHeight * 0.6);
+    };
     const onScroll = () => {
+      syncHero();
       scrolling = true;
       box.classList.add("is-scrolling");
       clearTimeout(scrollIdle);
@@ -263,12 +267,14 @@ export function SpaceBg() {
     window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("visibilitychange", onVis);
     reduce.addEventListener("change", onReduce);
+    syncHero();
     start();
     canvas.classList.add("is-on");
 
     return () => {
       stop();
       clearTimeout(scrollIdle);
+      root.classList.remove("in-hero");
       ro.disconnect();
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("scroll", onScroll);
@@ -279,9 +285,6 @@ export function SpaceBg() {
 
   return (
     <div className="sp" ref={wrap} aria-hidden>
-      <div className="sp-nb sp-nb-a"><i /></div>
-      <div className="sp-nb sp-nb-b"><i /></div>
-      <div className="sp-nb sp-nb-c"><i /></div>
       <canvas className="sp-stars" ref={cv} />
     </div>
   );

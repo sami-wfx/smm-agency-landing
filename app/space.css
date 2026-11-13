@@ -1,29 +1,16 @@
 /* ============================================================
    Космос — фиксированный фон всей страницы (components/SpaceBg.tsx).
-   Туманность — радиальные градиенты (без blur-фильтров), звёзды — один canvas.
-   --mx (мышь, −1…1) и --p (прогресс прокрутки страницы, 0…1) ставит скрипт.
+   Только звёзды (один canvas) и тёмная виньетка — без цветных пятен.
    ============================================================ */
-.sp{--mx:0;--p:0;position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.sp{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 /* виньетка по краям — глубина и спокойный фон под текстом */
 .sp::after{
   content:"";position:absolute;inset:0;
   background:radial-gradient(ellipse 85% 75% at 50% 55%,transparent 45%,rgba(6,6,10,.6) 100%);
 }
-.sp-nb{position:absolute;will-change:transform}
-.sp-nb i{display:block;width:100%;height:100%;border-radius:50%;animation:spDrift 46s ease-in-out infinite alternate}
-.sp-nb-a{left:-18%;top:-14%;width:78%;height:78%;transform:translate3d(calc(var(--mx) * -22px),calc(var(--p) * -9svh),0)}
-.sp-nb-a i{background:radial-gradient(closest-side,rgba(139,92,246,.36),rgba(139,92,246,.12) 55%,transparent)}
-.sp-nb-b{right:-16%;top:6%;width:66%;height:66%;transform:translate3d(calc(var(--mx) * -34px),calc(var(--p) * -14svh),0)}
-.sp-nb-b i{background:radial-gradient(closest-side,rgba(255,46,196,.2),rgba(255,46,196,.07) 55%,transparent);animation-duration:58s;animation-direction:alternate-reverse}
-.sp-nb-c{left:18%;bottom:-24%;width:64%;height:70%;transform:translate3d(calc(var(--mx) * -12px),calc(var(--p) * -5svh),0)}
-.sp-nb-c i{background:radial-gradient(closest-side,rgba(72,64,210,.3),rgba(72,64,210,.1) 55%,transparent);animation-duration:70s}
-@keyframes spDrift{from{transform:translate3d(-3%,2%,0) scale(1)}to{transform:translate3d(4%,-3%,0) scale(1.1)}}
 .sp-stars{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.2s ease .2s}
 .sp-stars.is-on{opacity:1}
-/* на время прокрутки дрейф туманности стоит */
-.sp.is-scrolling .sp-nb i{animation-play-state:paused}
 
-@media(prefers-reduced-motion:reduce){
-  .sp-nb{transform:none}
-  .sp-nb i{animation:none}
-}
+/* в Hero старые цветные пятна фона скрыты, дальше по странице возвращаются */
+.bg-fx .glow{transition:opacity .8s ease}
+html.in-hero .bg-fx .glow{opacity:0}

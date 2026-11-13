@@ -106,7 +106,6 @@ export function Hero() {
               style={{ ["--tone" as string]: TONES[m.tone].soft, ["--d" as string]: `${i * -1.9}s` } as CSSProperties}
             >
               <div className="hx-in" aria-hidden>
-                <div className="hx-glow" />
                 <div className="hx-breathe">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
