@@ -85,9 +85,21 @@ export function Hero() {
         <div className="hx-giant" aria-hidden>
           {WORD.map((ch, i) => (
             <Fragment key={i}>
-              <span className="hx-l" data-c={ch} style={{ ["--i" as string]: i } as CSSProperties}>
+              {/* TRIO влетает слева, CRASH справа; --k — очередь у точки удара (ближние к стыку первыми) */}
+              <span
+                className={i <= 3 ? "hx-l hx-lt" : "hx-l hx-rt"}
+                data-c={ch}
+                style={{ ["--i" as string]: i, ["--k" as string]: i <= 3 ? 3 - i : i - 4 } as CSSProperties}
+              >
                 {ch}
               </span>
+              {/* точка удара между O и C: вспышка и ударная волна (на телефоне скрыта) */}
+              {i === 3 && (
+                <span className="hx-hit">
+                  <b />
+                  <i />
+                </span>
+              )}
               {/* на телефоне надпись переносится: TRIO / CRASH — так она крупнее */}
               {i === 3 && <span className="hx-br" />}
             </Fragment>

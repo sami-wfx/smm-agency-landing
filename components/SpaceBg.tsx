@@ -237,7 +237,7 @@ export function SpaceBg() {
     const root = document.documentElement;
     const syncHero = () => {
       if (!hero) return;
-      root.classList.toggle("in-hero", hero.getBoundingClientRect().bottom > window.innerHeight * 0.6);
+      root.classList.toggle("past-hero", hero.getBoundingClientRect().bottom <= window.innerHeight * 0.6);
     };
     const onScroll = () => {
       syncHero();
@@ -274,7 +274,7 @@ export function SpaceBg() {
     return () => {
       stop();
       clearTimeout(scrollIdle);
-      root.classList.remove("in-hero");
+      root.classList.remove("past-hero");
       ro.disconnect();
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("scroll", onScroll);

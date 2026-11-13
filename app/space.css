@@ -12,5 +12,5 @@
 .sp-stars.is-on{opacity:1}
 
 /* в Hero старые цветные пятна фона скрыты, дальше по странице возвращаются */
-.bg-fx .glow{transition:opacity .8s ease}
-html.in-hero .bg-fx .glow{opacity:0}
+.bg-fx .glow{opacity:0;transition:opacity .8s ease}
+html.past-hero .bg-fx .glow{opacity:1}
