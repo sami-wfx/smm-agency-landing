@@ -1,4 +1,4 @@
-:HL["/smm-agency-landing/_next/static/chunks/1k7xly1nl1tpu.css","style"]
+:HL["/smm-agency-landing/_next/static/chunks/0-mp8b04upm4h.css","style"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"/_not-found","h":96,"c":"$Q2"}]]
-0:{"b":"Ru2D49Vde5OQ9J1cMQsPd","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"q3rDGQwNF1bmfV4kQwy2w","t":{"t":{"s":"","h":80,"c":"$Q1"}}}

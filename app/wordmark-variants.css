@@ -1,0 +1,109 @@
+/* ============================================================
+   ВРЕМЕННО: три варианта оживления надписи TRIOCRASH в Hero.
+   Включаются адресом ?w=1|2|3 (layout.tsx ставит <html data-w>).
+   Без ?w= ничего из этого не действует. После выбора лишнее удалить.
+   ============================================================ */
+#hero .hx-vf,#hero .hx-tl{display:none}
+@keyframes hxFade{from{opacity:0}to{opacity:1}}
+
+/* ---------- переключатель (виден только при ?w=…) ---------- */
+.pick{display:none}
+html[data-w] .pick{
+  display:flex;position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:90;gap:4px;align-items:center;
+  padding:6px;border-radius:999px;background:rgba(10,10,12,.94);border:1px solid rgba(255,255,255,.18);
+  font:700 12px 'JetBrains Mono','JetBrains Mono Fallback',monospace;max-width:calc(100vw - 20px);
+}
+.pick-t{padding:0 8px 0 10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.1em;font-size:11px}
+.pick a{display:flex;gap:7px;align-items:center;padding:8px 13px;border-radius:999px;color:rgba(255,255,255,.82);text-decoration:none;white-space:nowrap}
+.pick a b{font-weight:700}
+html[data-w="0"] .pick a[data-v="0"],
+html[data-w="1"] .pick a[data-v="1"],
+html[data-w="2"] .pick a[data-v="2"],
+html[data-w="3"] .pick a[data-v="3"]{background:#fff;color:#0a0a0a}
+@media(max-width:560px){
+  .pick-t,.pick a span{display:none}
+  .pick a{padding:9px 16px}
+}
+
+/* ================= 1. ВИДОИСКАТЕЛЬ ================= */
+/* фокус-пулл: надпись «наводится на резкость» (с перелётом), потом изредка чуть подфокусируется */
+html[data-w="1"] #hero .hx-giant{animation:hxFocus 1.7s cubic-bezier(.3,.6,.2,1) .1s backwards,hxRefocus 9s ease-in-out 3.5s infinite}
+@keyframes hxFocus{0%{filter:blur(18px)}40%{filter:blur(3px)}58%{filter:blur(8px)}80%{filter:blur(1px)}100%{filter:blur(0)}}
+@keyframes hxRefocus{0%,90%,100%{filter:blur(0)}94%{filter:blur(1.6px)}97%{filter:blur(.4px)}}
+html[data-w="1"] #hero .hx-l{animation:hxFade .45s ease both;animation-delay:calc(.05s + var(--i) * .025s)}
+/* «экран» камеры: рамка кадра, REC, параметры, таймкод */
+html[data-w="1"] #hero .hx-vf{
+  display:block;position:absolute;z-index:5;pointer-events:none;
+  left:clamp(14px,2vw,32px);right:clamp(14px,2vw,32px);top:calc(var(--nav-h) + 16px);bottom:clamp(14px,2vw,28px);
+  font:700 12px 'JetBrains Mono','JetBrains Mono Fallback',monospace;letter-spacing:.1em;
+  color:rgba(255,255,255,.9);text-shadow:0 1px 8px rgba(0,0,0,.85);
+  opacity:0;animation:hxFade .6s ease 1.5s forwards;
+}
+#hero .hx-vf .c{position:absolute;width:26px;height:26px;border:0 solid rgba(255,255,255,.75)}
+#hero .hx-vf .tl{left:0;top:0;border-width:2px 0 0 2px}
+#hero .hx-vf .tr{right:0;top:0;border-width:2px 2px 0 0}
+#hero .hx-vf .bl{left:0;bottom:0;border-width:0 0 2px 2px}
+#hero .hx-vf .br{right:0;bottom:0;border-width:0 2px 2px 0}
+#hero .hx-vf .rec{position:absolute;left:44px;top:5px;display:flex;align-items:center;gap:8px}
+#hero .hx-vf .rec b{width:10px;height:10px;border-radius:50%;background:#ff2a2a;animation:hxRec 1.2s steps(1) infinite}
+@keyframes hxRec{0%,55%{opacity:1}56%,100%{opacity:.15}}
+#hero .hx-vf .spec{position:absolute;right:44px;top:5px}
+#hero .hx-vf .iso{position:absolute;left:44px;bottom:3px}
+#hero .hx-vf .tcode{position:absolute;right:44px;bottom:3px;font-variant-numeric:tabular-nums}
+@media(max-width:560px){
+  html[data-w="1"] #hero .hx-vf{font-size:11px}
+  #hero .hx-vf .spec,#hero .hx-vf .iso{display:none}
+  #hero .hx-vf .rec{left:36px}
+  #hero .hx-vf .tcode{right:36px}
+}
+
+/* ================= 2. МОНТАЖНЫЕ СКЛЕЙКИ ================= */
+/* буквы «вклеиваются» жёсткой склейкой, когда по ним проходит плейхед */
+html[data-w="2"] #hero .hx-l{animation:hxCutIn .22s steps(1,end) both;animation-delay:calc(.37s + var(--i) * .144s)}
+@keyframes hxCutIn{
+  0%{opacity:0;transform:scale(1.08)}
+  1%{opacity:1;transform:scale(1.08);animation-timing-function:cubic-bezier(.2,.8,.2,1)}
+  100%{opacity:1;transform:none}
+}
+html[data-w="2"] #hero .hx-l::after{display:none}
+html[data-w="2"] #hero .hx-tl{
+  display:block;position:absolute;left:3vw;right:3vw;bottom:calc(9svh - 34px);height:22px;pointer-events:none;
+}
+#hero .hx-ruler{
+  position:absolute;inset:0;display:flex;justify-content:space-between;align-items:flex-end;
+  border-top:1px solid rgba(255,255,255,.35);
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0 1px,transparent 1px 2.35vw) top/100% 5px no-repeat,
+    repeating-linear-gradient(90deg,rgba(255,255,255,.85) 0 1px,transparent 1px 11.75vw) top/100% 10px no-repeat;
+  font:700 10px/1 'JetBrains Mono','JetBrains Mono Fallback',monospace;letter-spacing:.08em;color:rgba(255,255,255,.65);
+  text-shadow:none;opacity:0;animation:hxFade .5s ease .3s forwards;
+}
+#hero .hx-ruler i{font-style:normal}
+#hero .hx-ph{
+  position:absolute;left:0;bottom:-2px;width:2px;height:calc(.95em + 38px);background:#b8ff3c;
+  box-shadow:0 0 10px rgba(184,255,60,.55);opacity:0;
+  animation:hxSweep 1.45s linear .3s both,hxScrub 16s linear 4.5s infinite;
+}
+#hero .hx-ph::before{content:"";position:absolute;top:-8px;left:-5px;border:6px solid transparent;border-top-color:#b8ff3c;border-bottom:0}
+@keyframes hxSweep{0%{opacity:1;transform:translateX(0)}92%{opacity:1}100%{opacity:0;transform:translateX(calc(94vw - 2px))}}
+@keyframes hxScrub{0%{opacity:0;transform:translateX(0)}6%{opacity:.9}94%{opacity:.9}100%{opacity:0;transform:translateX(calc(94vw - 2px))}}
+@media(max-width:560px){
+  html[data-w="2"] #hero .hx-tl{display:none}
+  html[data-w="2"] #hero .hx-l{animation-delay:calc(.3s + var(--i) * .11s)}
+}
+
+/* ================= 3. ЖИВАЯ ВОЛНА ================= */
+/* буквы плавно «качаются» волной (как люди парят), а у курсора слегка вырастают */
+html[data-w="3"] #hero .hx-l{
+  animation:hxLetterIn .9s cubic-bezier(.16,1,.3,1) both,hxWave 5.4s ease-in-out infinite;
+  animation-delay:calc(.15s + var(--i) * .06s),calc(var(--i) * -.55s);
+  transform-origin:50% 100%;scale:calc(1 + var(--lift,0) * .12);transition:scale .22s ease-out;
+}
+@keyframes hxWave{0%,100%{translate:0 0}50%{translate:0 -.05em}}
+html[data-w="3"] #hero .hx-stage.is-scrolling .hx-l{animation-play-state:paused}
+
+@media(prefers-reduced-motion:reduce){
+  html[data-w] #hero .hx-l,html[data-w] #hero .hx-giant,#hero .hx-vf,#hero .hx-vf *,#hero .hx-ruler,#hero .hx-ph{animation:none !important}
+  html[data-w] #hero .hx-l,#hero .hx-vf,#hero .hx-ruler{opacity:1 !important}
+  #hero .hx-ph{display:none}
+}

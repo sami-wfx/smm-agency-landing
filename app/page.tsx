@@ -13,6 +13,7 @@ import { Process } from "@/components/Process";
 import { Contacts } from "@/components/Contacts";
 import { Footer } from "@/components/Footer";
 import { Overlays } from "@/components/Overlays";
+import { VariantPick } from "@/components/VariantPick";
 import { MotionRig } from "@/components/MotionRig";
 import { SkipLink } from "@/components/SkipLink";
 
@@ -40,6 +41,7 @@ export default function Home() {
         </div>
       </div>
       <Overlays />
+      <VariantPick />
       <MotionRig />
     </UIProvider>
   );
