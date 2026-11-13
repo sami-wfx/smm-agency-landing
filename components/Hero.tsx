@@ -103,7 +103,7 @@ export function Hero() {
               key={m.key}
               className="hx-fig"
               data-member={m.key}
-              style={{ ["--tone" as string]: TONES[m.tone].soft, ["--rim" as string]: TONES[m.tone].solid, ["--d" as string]: `${i * -1.9}s` } as CSSProperties}
+              style={{ ["--tone" as string]: TONES[m.tone].soft, ["--d" as string]: `${i * -1.9}s` } as CSSProperties}
             >
               <div className="hx-in" aria-hidden>
                 <div className="hx-glow" />
@@ -121,15 +121,6 @@ export function Hero() {
                     loading="eager"
                     fetchPriority={i === 0 ? "high" : "auto"}
                     decoding="async"
-                  />
-                  {/* цветной «контровый» свет по силуэту: слева цвет участника, справа холодный; мягко пульсирует */}
-                  <span
-                    className="hx-rim"
-                    aria-hidden
-                    style={{
-                      WebkitMaskImage: `url(${IMG.team[m.photo].src})`,
-                      maskImage: `url(${IMG.team[m.photo].src})`,
-                    } as CSSProperties}
                   />
                   <span
                     className="hx-shine"
