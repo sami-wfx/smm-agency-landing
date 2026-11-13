@@ -166,8 +166,8 @@ export function Hero() {
 
         <div className="hx-tag">
           <p className="hx-tag-t">Не ведём соцсети. Создаём бренды, о которых говорят.</p>
-          <AnchorLink href="#cases" className="hx-tag-a">
-            Смотреть кейсы
+          <AnchorLink href="#clients" className="hx-tag-a">
+            Наши клиенты
             <i aria-hidden>→</i>
           </AnchorLink>
         </div>

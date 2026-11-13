@@ -42,7 +42,7 @@ export type ClientItem = {
 export const NAV_LINKS = [
   { href: "#services", label: "Услуги" },
   { href: "#equipment", label: "Оборудование" },
-  { href: "#cases", label: "Кейсы" },
+  { href: "#clients", label: "Клиенты" },
   { href: "#pricing", label: "Тарифы" },
   { href: "#process", label: "Процесс" },
   { href: "#contacts", label: "Контакты" },

@@ -7,7 +7,6 @@ import { Hero } from "@/components/Hero";
 import { Marquee } from "@/components/Marquee";
 import { Equipment } from "@/components/Equipment";
 import { Services } from "@/components/Services";
-import { Cases } from "@/components/Cases";
 import { Clients } from "@/components/Clients";
 import { Pricing } from "@/components/Pricing";
 import { Process } from "@/components/Process";
@@ -32,7 +31,6 @@ export default function Home() {
             <Marquee />
             <Equipment />
             <Services />
-            <Cases />
             <Clients />
             <Pricing />
             <Process />
