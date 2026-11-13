@@ -3,12 +3,12 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Космос за людьми в Hero: туманность (CSS, hero.css) + один 2D-canvas со звёздами.
- * — без WebGL и тяжёлых фильтров; рисуем только пока блок виден и вкладка активна;
- * — глубина: дальние звёзды двигаются медленнее (мышь + прогресс скролла Hero);
+ * Космос — фиксированный фон всей страницы: туманность (CSS, space.css) + один 2D-canvas со звёздами.
+ * — без WebGL и тяжёлых фильтров; цикл стоит, пока вкладка скрыта;
+ * — глубина: дальние звёзды двигаются медленнее (мышь + прокрутка страницы);
  * — раз в 6–10 секунд пролетает одна падающая звезда (не во время прокрутки);
+ * — в покое рисуем 30 кадров/с, при прокрутке и движении мыши — по частоте экрана;
  * — prefers-reduced-motion: один статичный кадр, без цикла.
- * Родитель — .hx-stage (у него класс is-scrolling на время прокрутки), секция — .hx.
  */
 type Star = { x: number; y: number; z: number; r: number; a: number; ph: number; sp: number; c: string; big: boolean };
 
@@ -55,17 +55,15 @@ function makeStars(n: number): Star[] {
   return out;
 }
 
-export function HeroSpace() {
+export function SpaceBg() {
   const wrap = useRef<HTMLDivElement>(null);
   const cv = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const box = wrap.current;
     const canvas = cv.current;
-    const section = box?.closest<HTMLElement>("section");
-    const stage = box?.parentElement;
     const ctx = canvas?.getContext("2d");
-    if (!box || !canvas || !ctx || !section || !stage) return;
+    if (!box || !canvas || !ctx) return;
 
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
     const small = matchMedia("(max-width: 560px)");
@@ -89,8 +87,10 @@ export function HeroSpace() {
     let stars: Star[] = [];
     let raf = 0;
     let running = false;
-    let visible = true;
     let last = 0;
+    let scrolling = false;
+    let scrollIdle = 0;
+    let lastMove = 0;
     // сглаженное смещение от мыши (−1…1)
     let mx = 0;
     let my = 0;
@@ -119,27 +119,27 @@ export function HeroSpace() {
       if (!W || !H) return;
       ctx!.clearRect(0, 0, W, H);
       const animate = !reduce.matches;
-      // прогресс скролла Hero (0…1)
-      let p = 0;
+      // прокрутка страницы: px — для звёзд, 0…1 — для туманности (она остаётся в пределах экрана)
+      let sy = 0;
       if (animate) {
-        const r = section!.getBoundingClientRect();
-        const range = r.height - window.innerHeight;
-        p = range > 0 ? Math.min(1, Math.max(0, -r.top / range)) : 0;
+        sy = window.scrollY;
+        const range = document.documentElement.scrollHeight - window.innerHeight;
+        const p = range > 0 ? Math.min(1, Math.max(0, sy / range)) : 0;
         mx += (tx - mx) * 0.06;
         my += (ty - my) * 0.06;
+        box!.style.setProperty("--mx", mx.toFixed(3));
+        box!.style.setProperty("--p", p.toFixed(4));
       }
       const ox = mx * -16;
-      const oy = my * -10 - p * 70;
+      const oy = my * -10 - sy * 0.1; // звёзды уплывают медленнее контента; края замыкаются через wrapN
 
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
         const d = 0.25 + s.z * 0.75;
         const x = wrapN(s.x * W + ox * d, W);
         const y = wrapN(s.y * H + oy * d, H);
-        // плавно гаснем у верхнего и нижнего краёв блока — без резкой границы
-        const edge = Math.min(1, y / (H * 0.1), (H - y) / (H * 0.14));
         const tw = animate ? 0.65 + 0.35 * Math.sin(t * 0.001 * s.sp + s.ph) : 1;
-        const al = s.a * tw * edge;
+        const al = s.a * tw;
         if (al <= 0.01) continue;
         if (s.big) {
           const g = s.r * 9;
@@ -159,7 +159,7 @@ export function HeroSpace() {
 
       // падающая звезда
       if (animate) {
-        if (!shot && visible && t > nextShot && !stage!.classList.contains("is-scrolling")) {
+        if (!shot && t > nextShot && !scrolling) {
           const ang = ((20 + Math.random() * 18) * Math.PI) / 180;
           const sp = W * (0.7 + Math.random() * 0.3); // px/сек
           shot = {
@@ -209,8 +209,9 @@ export function HeroSpace() {
     const loop = (t: number) => {
       raf = 0;
       if (!running) return;
-      // на телефоне ограничиваем 30 кадрами/с — глаз не замечает, батарея спасибо скажет
-      if (small.matches && t - last < 32) {
+      // в покое (и всегда на телефоне) 30 кадров/с: мерцанию больше не нужно, а батарея скажет спасибо
+      const active = scrolling || t - lastMove < 500;
+      if ((small.matches || !active) && t - last < 32) {
         raf = requestAnimationFrame(loop);
         return;
       }
@@ -219,7 +220,7 @@ export function HeroSpace() {
       raf = requestAnimationFrame(loop);
     };
     const start = () => {
-      if (running || !visible || document.hidden || reduce.matches) return;
+      if (running || document.hidden || reduce.matches) return;
       running = true;
       raf = requestAnimationFrame(loop);
     };
@@ -231,8 +232,18 @@ export function HeroSpace() {
 
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
+      lastMove = performance.now();
       tx = (e.clientX / window.innerWidth) * 2 - 1;
       ty = (e.clientY / window.innerHeight) * 2 - 1;
+    };
+    const onScroll = () => {
+      scrolling = true;
+      box.classList.add("is-scrolling");
+      clearTimeout(scrollIdle);
+      scrollIdle = window.setTimeout(() => {
+        scrolling = false;
+        box.classList.remove("is-scrolling");
+      }, 180);
     };
     const onVis = () => (document.hidden ? stop() : start());
     const onReduce = () => {
@@ -244,17 +255,12 @@ export function HeroSpace() {
       }
     };
 
-    const io = new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting;
-      if (visible) start();
-      else stop();
-    });
     const ro = new ResizeObserver(resize);
 
     resize();
-    io.observe(box);
     ro.observe(box);
     window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("visibilitychange", onVis);
     reduce.addEventListener("change", onReduce);
     start();
@@ -262,20 +268,21 @@ export function HeroSpace() {
 
     return () => {
       stop();
-      io.disconnect();
+      clearTimeout(scrollIdle);
       ro.disconnect();
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("scroll", onScroll);
       document.removeEventListener("visibilitychange", onVis);
       reduce.removeEventListener("change", onReduce);
     };
   }, []);
 
   return (
-    <div className="hx-space" ref={wrap} aria-hidden>
-      <div className="hx-nb hx-nb-a"><i /></div>
-      <div className="hx-nb hx-nb-b"><i /></div>
-      <div className="hx-nb hx-nb-c"><i /></div>
-      <canvas className="hx-stars" ref={cv} />
+    <div className="sp" ref={wrap} aria-hidden>
+      <div className="sp-nb sp-nb-a"><i /></div>
+      <div className="sp-nb sp-nb-b"><i /></div>
+      <div className="sp-nb sp-nb-c"><i /></div>
+      <canvas className="sp-stars" ref={cv} />
     </div>
   );
 }

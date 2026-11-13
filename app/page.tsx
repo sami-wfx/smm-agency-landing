@@ -1,4 +1,5 @@
 import { UIProvider } from "@/components/UIProvider";
+import { SpaceBg } from "@/components/SpaceBg";
 import { BgFx } from "@/components/BgFx";
 import { CursorGlow } from "@/components/CursorGlow";
 import { Nav } from "@/components/Nav";
@@ -19,6 +20,7 @@ export default function Home() {
   return (
     <UIProvider>
       <SkipLink />
+      <SpaceBg />
       <BgFx />
       <CursorGlow />
       <Nav />
