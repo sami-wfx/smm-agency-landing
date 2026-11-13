@@ -159,16 +159,13 @@ export function Hero() {
                   />
                 </div>
               </div>
-              <span className="hx-role" aria-hidden>
-                {ROLES[i]}
-              </span>
               <span className="sr-only">{ROLES[i]}</span>
             </li>
           ))}
         </ul>
 
         <div className="hx-tag">
-          <p className="hx-tag-t">Reels-продюсеры и бренд-продюсеры из Таджикистана. Снимаем на Sony FX30.</p>
+          <p className="hx-tag-t">Не ведём соцсети. Создаём бренды, о которых говорят.</p>
           <AnchorLink href="#cases" className="hx-tag-a">
             Смотреть кейсы
             <i aria-hidden>→</i>
