@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useRef, type CSSProperties } from "react";
 import { IMG } from "@/lib/images";
 import { TEAM, TONES } from "@/lib/team";
+import { HeroSpace } from "./HeroSpace";
 
 /**
  * Hero «Команда в кадре» — спокойная версия.
@@ -82,6 +83,7 @@ export function Hero() {
   return (
     <section id="hero" ref={root} className="hx" aria-labelledby="hero-title">
       <div className="hx-stage" ref={stage}>
+        <HeroSpace />
         <div className="hx-giant" aria-hidden>
           {WORD.map((ch, i) => (
             <Fragment key={i}>

@@ -18,6 +18,38 @@ section#hero.hx{
   background:radial-gradient(60% 55% at 50% 100%,rgba(255,255,255,.07),transparent 70%);
 }
 
+/* ---------- космос за людьми: туманность (CSS) + звёзды (canvas, HeroSpace.tsx) ----------
+   слой под людьми (z 2) и надписью (z 4); без blur-фильтров — мягкость даёт сам радиальный градиент */
+#hero .hx-space{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+/* виньетка по краям — глубина и спокойный фон под текстом */
+#hero .hx-space::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse 85% 75% at 50% 55%,transparent 45%,rgba(6,6,10,.6) 100%);
+}
+#hero .hx-nb{position:absolute;will-change:transform}
+#hero .hx-nb i{display:block;width:100%;height:100%;border-radius:50%;animation:hxDrift 46s ease-in-out infinite alternate}
+/* параллакс: мышь и прогресс скролла приходят CSS-переменными со сцены */
+#hero .hx-nb-a{
+  left:-18%;top:-14%;width:78%;height:78%;
+  transform:translate3d(calc(var(--mx) * -22px),calc(var(--p) * -9svh),0);
+}
+#hero .hx-nb-a i{background:radial-gradient(closest-side,rgba(139,92,246,.36),rgba(139,92,246,.12) 55%,transparent)}
+#hero .hx-nb-b{
+  right:-16%;top:6%;width:66%;height:66%;
+  transform:translate3d(calc(var(--mx) * -34px),calc(var(--p) * -14svh),0);
+}
+#hero .hx-nb-b i{background:radial-gradient(closest-side,rgba(255,46,196,.2),rgba(255,46,196,.07) 55%,transparent);animation-duration:58s;animation-direction:alternate-reverse}
+#hero .hx-nb-c{
+  left:18%;bottom:-24%;width:64%;height:70%;
+  transform:translate3d(calc(var(--mx) * -12px),calc(var(--p) * -5svh),0);
+}
+#hero .hx-nb-c i{background:radial-gradient(closest-side,rgba(72,64,210,.3),rgba(72,64,210,.1) 55%,transparent);animation-duration:70s}
+@keyframes hxDrift{from{transform:translate3d(-3%,2%,0) scale(1)}to{transform:translate3d(4%,-3%,0) scale(1.1)}}
+#hero .hx-stars{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.2s ease .2s}
+#hero .hx-stars.is-on{opacity:1}
+/* на время прокрутки дрейф туманности стоит */
+#hero .hx-stage.is-scrolling .hx-nb i{animation-play-state:paused}
+
 /* ---------- надпись: сплошной белый цвет (без градиента на тексте — он ломается на телефонах) ---------- */
 #hero .hx-giant{
   position:absolute;inset:0;z-index:4;pointer-events:none;user-select:none;
@@ -137,6 +169,8 @@ section#hero.hx{
   section#hero.hx{height:auto}
   #hero .hx-stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
   #hero .hx-glow,#hero .hx-shine{display:none}
+  #hero .hx-nb{transform:none}
+  #hero .hx-nb i{animation:none}
   #hero .hx-l,#hero .hx-l::after,#hero .hx-breathe,#hero .hx-shine::before{animation:none !important}
   #hero .hx-l{opacity:1}
   #hero .hx-in{transform:none !important}
