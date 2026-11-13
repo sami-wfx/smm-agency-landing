@@ -43,7 +43,8 @@ section#hero.hx{
 #hero .hx-team{
   /* люди как можно крупнее, но голова центрального не заходит под меню, а надпись не сжимается */
   --h:clamp(300px,min(88svh,calc((100svh - 76px) / 1.06),100vw),1500px);
-  position:absolute;left:0;right:0;bottom:0;z-index:2;margin:0;padding:0;list-style:none;
+  /* bottom:-30px — нижний край фото всегда за краем экрана: парение (до ~19px вверх с наклоном) не открывает «срез» */
+  position:absolute;left:0;right:0;bottom:-30px;z-index:2;margin:0;padding:0;list-style:none;
   display:flex;justify-content:center;align-items:flex-end;
 }
 #hero .hx-fig{
@@ -112,7 +113,7 @@ section#hero.hx{
     transform:translate3d(0,calc((1 - var(--in1)) * 14svh),0);
   }
   #hero .hx-br{display:block;flex-basis:100%;height:0}
-  #hero .hx-team{display:block;left:0;right:0;bottom:0;height:var(--hc)}
+  #hero .hx-team{display:block;left:0;right:0;bottom:-30px;height:var(--hc)}
   #hero .hx-fig{position:absolute;left:50%;bottom:0;margin:0;transition:none;overflow:visible;background:none;box-shadow:none;border-radius:0}
   /* 1 — слева, поднимается снизу */
   #hero .hx-fig:nth-child(1){z-index:2;width:calc(var(--hs) * .75);height:var(--hs);margin-left:calc(var(--hs) * -.375);transform:translate3d(calc(var(--off) * -1),0,0) scale(1)}
