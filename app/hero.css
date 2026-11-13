@@ -63,13 +63,13 @@ section#hero.hx{
 #hero .hx-glow{
   position:absolute;left:50%;top:18%;width:92%;height:82%;transform:translateX(-50%);
   background:radial-gradient(closest-side,var(--tone),transparent 74%);
-  filter:blur(40px);opacity:.34;animation:hxGlow 5.6s ease-in-out infinite;animation-delay:var(--d,0s);
+  filter:blur(40px);opacity:.5;animation:hxGlow 5.6s ease-in-out infinite;animation-delay:var(--d,0s);
 }
-@keyframes hxGlow{0%,100%{transform:translateX(-50%) scale(.94);opacity:.26}50%{transform:translateX(-50%) scale(1.07);opacity:.5}}
+@keyframes hxGlow{0%,100%{transform:translateX(-50%) scale(.94);opacity:.4}50%{transform:translateX(-50%) scale(1.1);opacity:.75}}
 /* лёгкое «дыхание» */
-#hero .hx-breathe{position:absolute;inset:0;transform-origin:50% 100%;animation:hxBreathe 7s ease-in-out infinite;animation-delay:var(--d,0s)}
-@keyframes hxBreathe{0%,100%{transform:translateY(0) scale(1) rotate(-.25deg)}50%{transform:translateY(-9px) scale(1.012) rotate(.25deg)}}
-#hero .hx-breathe img{display:block;width:100%;height:100%;filter:drop-shadow(0 16px 26px rgba(0,0,0,.5));pointer-events:none;user-select:none}
+#hero .hx-breathe{position:absolute;inset:0;transform-origin:50% 100%;animation:hxBreathe 6s ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes hxBreathe{0%,100%{transform:translate3d(0,0,0) scale(1) rotate(-.3deg)}33%{transform:translate3d(3px,-7px,0) scale(1.01) rotate(.15deg)}66%{transform:translate3d(-3px,-12px,0) scale(1.018) rotate(.4deg)}}
+#hero .hx-breathe img{display:block;width:100%;height:100%;filter:saturate(1.25) contrast(1.07) brightness(1.04) drop-shadow(0 16px 26px rgba(0,0,0,.5));pointer-events:none;user-select:none}
 
 /* блик света, пробегающий по фигуре (маска = силуэт человека) */
 #hero .hx-shine{
@@ -80,20 +80,29 @@ section#hero.hx{
 /* блик едет по силуэту (маска) — двигаем слой через transform, а не background-position */
 #hero .hx-shine::before{
   content:"";position:absolute;top:0;bottom:0;left:0;width:320%;will-change:transform;
-  background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.6) 50%,transparent 58%);
+  background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.8) 50%,transparent 58%);
   transform:translate3d(-103.125%,0,0);
   animation:hxShine 7.5s ease-in-out infinite;animation-delay:var(--sd,1s);
 }
 @keyframes hxShine{0%{transform:translate3d(-103.125%,0,0)}42%,100%{transform:translate3d(34.375%,0,0)}}
+/* контровый свет: тот же силуэт-маска, градиент «цвет участника → холодный голубой», режим screen; пульсирует только opacity */
+#hero .hx-rim{
+  position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.3;
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  background:linear-gradient(98deg,var(--rim,#8b5cf6) 0%,transparent 34%,transparent 66%,#5fd4ff 100%);
+  animation:hxRim 4.8s ease-in-out infinite;animation-delay:var(--d,0s);
+}
+@keyframes hxRim{0%,100%{opacity:.22}50%{opacity:.58}}
 /* на время прокрутки: блик скрыт (маска + blend — самое дорогое; visibility, а не opacity — без пересборки слоёв),
    «дыхание» и свечение на паузе */
 #hero .hx-stage.is-scrolling .hx-shine{visibility:hidden}
 #hero .hx-stage.is-scrolling .hx-breathe,
 #hero .hx-stage.is-scrolling .hx-glow,
+#hero .hx-stage.is-scrolling .hx-rim,
 #hero .hx-stage.is-scrolling .hx-l::after{animation-play-state:paused}
 /* при наведении человек чуть «подсвечивается» */
 #hero .hx-breathe img{transition:filter .4s ease}
-#hero .hx-fig:hover .hx-breathe img{filter:drop-shadow(0 16px 26px rgba(0,0,0,.5)) brightness(1.07) contrast(1.03)}
+#hero .hx-fig:hover .hx-breathe img{filter:saturate(1.35) contrast(1.08) brightness(1.1) drop-shadow(0 16px 26px rgba(0,0,0,.5))}
 
 /* подсказка */
 #hero .hx-cue{
@@ -128,7 +137,8 @@ section#hero.hx{
   /* пока средний не вышел, третий прячется внизу вместе с ним (за его спиной), потом выезжает вбок */
   #hero .hx-fig:nth-child(3) .hx-in{transform:translate3d(0,calc((1 - var(--in1)) * 108%),0)}
   #hero .hx-glow{display:none}
-  #hero .hx-breathe img{filter:drop-shadow(0 10px 16px rgba(0,0,0,.45))}
+  #hero .hx-breathe img{filter:saturate(1.22) contrast(1.06) brightness(1.03) drop-shadow(0 10px 16px rgba(0,0,0,.45))}
+  #hero .hx-rim{display:none}
   #hero .hx-cue{display:none}
 }
 
@@ -136,7 +146,7 @@ section#hero.hx{
 @media(prefers-reduced-motion:reduce){
   section#hero.hx{height:auto}
   #hero .hx-stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
-  #hero .hx-glow,#hero .hx-shine{display:none}
+  #hero .hx-glow,#hero .hx-shine,#hero .hx-rim{display:none}
   #hero .hx-l,#hero .hx-l::after,#hero .hx-breathe,#hero .hx-shine::before{animation:none !important}
   #hero .hx-l{opacity:1}
   #hero .hx-in{transform:none !important}
