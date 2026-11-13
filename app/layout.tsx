@@ -25,15 +25,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ru" suppressHydrationWarning>
-      <head>
-        {/* временный выбор варианта надписи в Hero: ?w=1|2|3 → <html data-w>, до первой отрисовки */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: 'try{var w=new URLSearchParams(location.search).get("w");if(w)document.documentElement.setAttribute("data-w",w)}catch(e){}',
-          }}
-        />
-      </head>
+    <html lang="ru">
       <body>{children}</body>
     </html>
   );

@@ -17,7 +17,6 @@ const ROLES = ["Продакшн", "Монтаж", "Продвижение"];
 export function Hero() {
   const root = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
-  const tc = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const el = root.current;
@@ -80,49 +79,35 @@ export function Hero() {
     };
   }, []);
 
-  // варианты надписи (?w=…): таймкод видоискателя (1) и «волна» букв от курсора (3)
+  // «волна» надписи: буквы у курсора слегка вырастают (только мышь; сама волна — в CSS)
   useEffect(() => {
-    const w = document.documentElement.getAttribute("data-w");
     const st = stage.current;
     if (!st) return;
-    if (w === "1" && tc.current) {
-      const el = tc.current;
-      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const t0 = performance.now();
-      const two = (n: number) => String(n).padStart(2, "0");
-      const id = window.setInterval(() => {
-        if (document.hidden) return;
-        const f = Math.floor((performance.now() - t0) / (1000 / 24)) + 24 * 84; // старт с 00:01:24:00
-        el.textContent = `00:${two(Math.floor(f / 1440) % 60)}:${two(Math.floor(f / 24) % 60)}:${two(f % 24)}`;
-      }, 80);
-      return () => clearInterval(id);
-    }
-    if (w === "3" && matchMedia("(pointer: fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const letters = Array.from(st.querySelectorAll<HTMLElement>(".hx-l"));
-      let raf = 0;
-      let mx = -1e4;
-      let my = -1e4;
-      const paint = () => {
-        raf = 0;
-        for (const l of letters) {
-          const r = l.getBoundingClientRect();
-          const dx = Math.abs(mx - (r.left + r.width / 2)) / (r.width * 2.2);
-          const dy = Math.abs(my - (r.top + r.height / 2)) / (r.height * 1.4);
-          l.style.setProperty("--lift", Math.max(0, 1 - Math.hypot(dx, dy)).toFixed(3));
-        }
-      };
-      const onMove = (e: PointerEvent) => {
-        if (e.pointerType !== "mouse") return;
-        mx = e.clientX;
-        my = e.clientY;
-        if (!raf) raf = requestAnimationFrame(paint);
-      };
-      window.addEventListener("pointermove", onMove, { passive: true });
-      return () => {
-        window.removeEventListener("pointermove", onMove);
-        if (raf) cancelAnimationFrame(raf);
-      };
-    }
+    if (!matchMedia("(pointer: fine)").matches || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const letters = Array.from(st.querySelectorAll<HTMLElement>(".hx-l"));
+    let raf = 0;
+    let mx = -1e4;
+    let my = -1e4;
+    const paint = () => {
+      raf = 0;
+      for (const l of letters) {
+        const r = l.getBoundingClientRect();
+        const dx = Math.abs(mx - (r.left + r.width / 2)) / (r.width * 2.2);
+        const dy = Math.abs(my - (r.top + r.height / 2)) / (r.height * 1.4);
+        l.style.setProperty("--lift", Math.max(0, 1 - Math.hypot(dx, dy)).toFixed(3));
+      }
+    };
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      mx = e.clientX;
+      my = e.clientY;
+      if (!raf) raf = requestAnimationFrame(paint);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   return (
@@ -138,33 +123,6 @@ export function Hero() {
               {i === 3 && <span className="hx-br" />}
             </Fragment>
           ))}
-          {/* вариант 2: линейка таймлайна и плейхед движутся вместе с надписью */}
-          <div className="hx-tl">
-            <span className="hx-ruler">
-              <i>00:00</i>
-              <i>00:02</i>
-              <i>00:04</i>
-              <i>00:06</i>
-              <i>00:08</i>
-            </span>
-            <span className="hx-ph" />
-          </div>
-        </div>
-        {/* вариант 1: «экран» видоискателя камеры */}
-        <div className="hx-vf" aria-hidden>
-          <i className="c tl" />
-          <i className="c tr" />
-          <i className="c bl" />
-          <i className="c br" />
-          <span className="rec">
-            <b />
-            REC
-          </span>
-          <span className="spec">4K · 24P · S-LOG3</span>
-          <span className="iso">ISO 800 · 1/48 · F2.8</span>
-          <span className="tcode" ref={tc}>
-            00:01:24:00
-          </span>
         </div>
         <h1 id="hero-title" className="sr-only">
           TRIOCRASH — Reels-продюсеры и бренд-продюсеры из Таджикистана
