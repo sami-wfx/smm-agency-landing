@@ -1,1 +1,9 @@
-[]
+[
+  { "name": "EMAL", "logo": "clients/emal.png" },
+  { "name": "UNV Tajikistan", "logo": "clients/unv.png" },
+  { "name": "UniSkill", "logo": "clients/uniskill.png" },
+  { "name": "KOMP.TJ", "logo": "clients/komp-tj.png" },
+  { "name": "Stroy Incom", "logo": "clients/stroy-incom.png" },
+  { "name": "Abrion", "logo": "clients/abrion.png" },
+  { "name": "Bobo Suhayl", "logo": "clients/bobo-suhayl.png" }
+]
