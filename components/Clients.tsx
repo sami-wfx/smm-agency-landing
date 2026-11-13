@@ -4,8 +4,24 @@ import { asset } from "@/lib/asset";
 
 /**
  * «Наши клиенты»: два ряда плашек (логотип + название), едут в разные стороны, по краям затухают.
- * Список — data/clients.json, логотипы — public/clients/. Пока список пуст, блок не показывается.
+ * Список — data/clients.json, логотипы — public/clients/.
+ * Пока клиентов нет, вместо них показываются ниши (NICHES) с другим заголовком.
  */
+const NICHES: ClientItem[] = [
+  "Ресторан",
+  "Beauty-бренд",
+  "Личный бренд",
+  "Блогер",
+  "Кофейня",
+  "Магазин",
+  "Клиника",
+  "Салон красоты",
+  "Эксперт",
+  "Фитнес",
+  "Школа",
+  "Отель",
+].map((name) => ({ name }));
+
 function Chip({ c }: { c: ClientItem }) {
   return (
     <li className="client">
@@ -41,18 +57,18 @@ function Row({ items, reverse }: { items: ClientItem[]; reverse?: boolean }) {
 }
 
 export function Clients() {
-  const list = clients as ClientItem[];
-  if (list.length === 0) return null;
+  const real = clients as ClientItem[];
+  const list = real.length ? real : NICHES;
   // чётные — в верхний ряд, нечётные — в нижний (при одном клиенте ряды одинаковые)
   const a = list.filter((_, i) => i % 2 === 0);
   const b = list.filter((_, i) => i % 2 === 1);
   return (
-    <section id="clients" aria-label="Наши клиенты">
+    <section id="clients" aria-label={real.length ? "Наши клиенты" : "С кем мы работаем"}>
       <div className="container">
         <div className="reveal-group clients-head">
-          <span className="eyebrow reveal"><span className="reveal-inner">Клиенты</span></span>
-          <h2 className="h2 reveal"><span className="reveal-inner">Наши клиенты</span></h2>
-          <p className="clients-sub rise">Бренды, компании и блогеры, с которыми мы работаем</p>
+          <span className="eyebrow reveal"><span className="reveal-inner">{real.length ? "Клиенты" : "Ниши"}</span></span>
+          <h2 className="h2 reveal"><span className="reveal-inner">{real.length ? "Наши клиенты" : "С кем мы работаем"}</span></h2>
+          <p className="clients-sub rise">{real.length ? "Бренды, компании и блогеры, с которыми мы работаем" : "Бизнесы и личные бренды, которым мы делаем Reels и узнаваемость"}</p>
         </div>
       </div>
       <div className="clients-rows rise">
