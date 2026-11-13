@@ -30,50 +30,13 @@ section#hero.hx{
   transform:translate3d(calc(var(--mx) * -12px),calc((1 - var(--in1)) * -36svh + var(--s) * -5vh + var(--my) * -6px),0) scaleX(calc(1 + var(--s) * .028));
   transition:transform .5s cubic-bezier(.22,1,.36,1);
 }
-/* вход «краш»: TRIO летит слева, CRASH справа, у стыка O|C — удар (≈0.9 с), отскок, вспышка, дрожь */
-#hero .hx-l{position:relative;isolation:isolate;display:inline-block;animation-duration:1s;animation-fill-mode:both;animation-delay:calc(.3s + var(--k,0) * .06s)}
-#hero .hx-lt{animation-name:hxCrashL}
-#hero .hx-rt{animation-name:hxCrashR}
-@keyframes hxCrashL{
-  0%{transform:translate3d(-75vw,0,0) skewX(-16deg);animation-timing-function:cubic-bezier(.6,0,.9,.5)}
-  60%{transform:translate3d(0,0,0) skewX(0);animation-timing-function:ease-out}
-  74%{transform:translate3d(-.07em,0,0)}
-  100%{transform:none}
-}
-@keyframes hxCrashR{
-  0%{transform:translate3d(75vw,0,0) skewX(16deg);animation-timing-function:cubic-bezier(.6,0,.9,.5)}
-  60%{transform:translate3d(0,0,0) skewX(0);animation-timing-function:ease-out}
-  74%{transform:translate3d(.07em,0,0)}
-  100%{transform:none}
-}
-/* точка удара — нулевой ширины, между O и C */
-#hero .hx-hit{position:relative;z-index:2;flex:none;width:0;height:.95em;align-self:flex-end;pointer-events:none}
-#hero .hx-hit i,#hero .hx-hit b{position:absolute;left:0;top:50%;border-radius:50%;opacity:0}
-#hero .hx-hit i{width:1em;height:1em;margin:-.5em 0 0 -.5em;border:.03em solid rgba(255,255,255,.9);animation:hxRing .8s cubic-bezier(.1,.7,.2,1) .9s forwards}
-#hero .hx-hit b{width:1.8em;height:1.8em;margin:-.9em 0 0 -.9em;background:radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,.25) 45%,transparent);animation:hxFlash .5s ease-out .9s forwards}
-@keyframes hxRing{0%{transform:scale(.2);opacity:.95}100%{transform:scale(3.4);opacity:0}}
-@keyframes hxFlash{0%{transform:scale(.3);opacity:1}100%{transform:scale(1.3);opacity:0}}
-/* дрожь надписи в момент удара и редкий глитч раз в 7 с (свойство translate — не конфликтует с transform надписи) */
-#hero .hx-giant{animation:hxShake .45s ease-out .88s both,hxJit 7s steps(1) 3.2s infinite}
-@keyframes hxShake{0%{translate:0 0}15%{translate:-.025em .012em}35%{translate:.02em -.01em}55%{translate:-.012em .006em}75%{translate:.006em 0}100%{translate:0 0}}
-@keyframes hxJit{0%,91.5%,100%{translate:0 0}92%{translate:-.012em 0}94%{translate:.02em 0}96%{translate:-.008em .004em}98%{translate:0 0}}
-/* глитч: цветной «призрак» буквы (малиновый + лаймовый кант) на мгновение съезжает в стороны */
-#hero .hx-l::before{
-  content:attr(data-c);position:absolute;inset:0;z-index:-1;pointer-events:none;
-  color:#ff2ec4;text-shadow:-.045em 0 0 #b8ff3c;opacity:0;
-  animation:hxGhost 7s steps(1) infinite;animation-delay:calc(3.2s + var(--i,0) * .05s);
-}
-@keyframes hxGhost{
-  0%,91.5%,100%{opacity:0;transform:none}
-  92%{opacity:.9;transform:translate3d(.04em,0,0) skewX(-5deg)}
-  94%{opacity:.9;transform:translate3d(-.05em,.01em,0)}
-  96%{opacity:.9;transform:translate3d(.03em,-.01em,0) skewX(4deg)}
-  98%{opacity:0;transform:none}
-}
+#hero .hx-l{position:relative;display:inline-block;opacity:0;animation:hxLetterIn .9s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(.15s + var(--i) * .06s)}
+/* «скан»: подсветка букв — отдельный слой, у которого меняется только opacity (раньше анимировался text-shadow) */
 #hero .hx-l::after{content:attr(data-c);position:absolute;inset:0;pointer-events:none;color:transparent;
   text-shadow:0 0 .22em rgba(182,255,61,.75),0 0 .5em rgba(139,92,246,.4);
   opacity:0;animation:hxScan 6.5s ease-in-out infinite;animation-delay:calc(2s + var(--i) * .14s)}
 @keyframes hxScan{0%,72%,100%{opacity:0}86%{opacity:1}}
+@keyframes hxLetterIn{from{opacity:0;transform:translateY(40%)}to{opacity:1;transform:none}}
 #hero .hx-br{display:none}
 
 /* ---------- люди ---------- */
@@ -142,7 +105,6 @@ section#hero.hx{
     transform:translate3d(0,calc((1 - var(--in1)) * 14svh),0);
   }
   #hero .hx-br{display:block;flex-basis:100%;height:0}
-  #hero .hx-hit{display:none}
   #hero .hx-team{display:block;left:0;right:0;bottom:-30px;height:var(--hc)}
   #hero .hx-fig{position:absolute;left:50%;bottom:0;margin:0;transition:none;overflow:visible;background:none;box-shadow:none;border-radius:0}
   /* 1 — слева, поднимается снизу */
@@ -161,8 +123,8 @@ section#hero.hx{
 @media(prefers-reduced-motion:reduce){
   section#hero.hx{height:auto}
   #hero .hx-stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
-  #hero .hx-l,#hero .hx-l::after,#hero .hx-breathe,#hero .hx-breathe img,#hero .hx-giant{animation:none !important}
-  #hero .hx-l::before,#hero .hx-hit{display:none}
+  #hero .hx-l,#hero .hx-l::after,#hero .hx-breathe,#hero .hx-breathe img{animation:none !important}
+  #hero .hx-l{opacity:1}
   #hero .hx-in{transform:none !important}
   #hero .hx-giant{transition:none;letter-spacing:-.01em;transform:none}
   #hero .hx-cue{display:none}
