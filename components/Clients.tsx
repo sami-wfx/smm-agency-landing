@@ -22,12 +22,15 @@ const NICHES: ClientItem[] = [
   "Отель",
 ].map((name) => ({ name }));
 
+// метка сборки: при каждом деплое адрес логотипов меняется, и браузер не показывает старые картинки из кеша
+const BUILD = Date.now().toString(36);
+
 function Chip({ c }: { c: ClientItem }) {
   return (
     <li className="client">
       {c.logo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={asset(c.logo)} alt="" width={48} height={48} loading="lazy" decoding="async" draggable={false} />
+        <img src={`${asset(c.logo)}?v=${BUILD}`} alt="" width={48} height={48} loading="lazy" decoding="async" draggable={false} />
       ) : (
         <span className="client-ph" aria-hidden>
           {c.name.trim().charAt(0).toUpperCase()}
