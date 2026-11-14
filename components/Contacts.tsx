@@ -8,14 +8,20 @@ export function Contacts() {
   return (
     <section id="contacts">
       <div className="container">
-        <div className="panel reveal-group">
-          <h2 className="reveal"><span className="reveal-inner">Напишите нам — подберём лучший тариф</span></h2>
-          <p className="rise">Расскажите о проекте — предложим стратегию и просчитаем результат под ваш бюджет.</p>
+        <div className="cta reveal-group">
+          <span className="eyebrow reveal"><span className="reveal-inner">Следующий шаг</span></span>
+          <h2 className="cta-h reveal">
+            <span className="reveal-inner">
+              Давайте сделаем бренд, о&nbsp;котором <em>заговорят</em>
+            </span>
+          </h2>
+          <p className="cta-p rise">Расскажите о проекте — предложим стратегию и просчитаем результат под ваш бюджет.</p>
           <div className="ctas rise">
-            <ChannelButtons />
-            <button className="btn btn-secondary" onClick={() => openModal()}>
-              Оставить заявку
+            <button className="btn btn-primary with-arrow" onClick={() => openModal()}>
+              Обсудить проект
+              <span className="arrow" aria-hidden>→</span>
             </button>
+            <ChannelButtons primaryFirst={false} />
           </div>
         </div>
       </div>

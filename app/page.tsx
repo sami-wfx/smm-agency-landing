@@ -15,11 +15,13 @@ import { Footer } from "@/components/Footer";
 import { Overlays } from "@/components/Overlays";
 import { MotionRig } from "@/components/MotionRig";
 import { SkipLink } from "@/components/SkipLink";
+import { ScrollBar } from "@/components/ScrollBar";
 
 export default function Home() {
   return (
     <UIProvider>
       <SkipLink />
+      <ScrollBar />
       <SpaceBg />
       <BgFx />
       <CursorGlow />

@@ -1,33 +1,46 @@
 import { IMG } from "@/lib/images";
-import { CHANNEL_LABEL, channelLink, channels, leadMessage, type Channel } from "@/lib/site";
-
-const ICON: Record<Channel, React.ReactNode> = {
-  telegram: <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z" />,
-  whatsapp: (
-    <>
-      <path d="M3 21l1.6-4.9A8.5 8.5 0 1 1 8 19.4L3 21Z" />
-      <path d="M9 9.5c.3 2.2 2.3 4.2 4.5 4.5l1.2-1.2-1.8-1-.8.6a3 3 0 0 1-1.6-1.6l.6-.8-1-1.8L9 9.5Z" />
-    </>
-  ),
-};
+import { NAV_LINKS } from "@/lib/content";
+import { CHANNEL_LABEL, channelLink, channels, leadMessage } from "@/lib/site";
+import { AnchorLink } from "./AnchorLink";
 
 export function Footer() {
   const list = channels();
   return (
     <footer>
-      <div className="container row">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={IMG.logo.src} alt="TRIOCRASH" width={IMG.logo.width} height={IMG.logo.height} loading="lazy" decoding="async" />
-        <p className="copy">© {new Date().getFullYear()} TRIOCRASH. Reels-продакшн, Таджикистан.</p>
-        {list.length > 0 && (
-          <div className="social">
+      <div className="container">
+        <div className="f-grid">
+          <div className="f-brand">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={IMG.logo.src} alt="TRIOCRASH" width={IMG.logo.width} height={IMG.logo.height} loading="lazy" decoding="async" />
+            <p>Reels-продюсеры и бренд-продюсеры из Таджикистана. Делаем бренды, о которых говорят.</p>
+          </div>
+          <nav className="f-col" aria-label="Разделы сайта">
+            <span className="f-t">Разделы</span>
+            {NAV_LINKS.map((l) => (
+              <AnchorLink key={l.href} href={l.href}>
+                {l.label}
+              </AnchorLink>
+            ))}
+          </nav>
+          <div className="f-col">
+            <span className="f-t">Связаться</span>
             {list.map((ch) => (
-              <a key={ch} href={channelLink(ch, leadMessage({}))} target="_blank" rel="noopener noreferrer" aria-label={CHANNEL_LABEL[ch]}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>{ICON[ch]}</svg>
+              <a key={ch} href={channelLink(ch, leadMessage({}))} target="_blank" rel="noopener noreferrer">
+                {CHANNEL_LABEL[ch]}
               </a>
             ))}
+            <AnchorLink href="#contacts">Оставить заявку</AnchorLink>
           </div>
-        )}
+        </div>
+        <div className="f-word" aria-hidden>
+          TRIOCRASH
+        </div>
+        <div className="f-bottom">
+          <p>© {new Date().getFullYear()} TRIOCRASH. Reels-продакшн, Таджикистан.</p>
+          <AnchorLink href="#top" className="f-up">
+            Наверх <i aria-hidden>↑</i>
+          </AnchorLink>
+        </div>
       </div>
     </footer>
   );

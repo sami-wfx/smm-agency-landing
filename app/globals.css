@@ -8,6 +8,7 @@
 @import "./hero.css" layer(legacy);
 @import "./space.css" layer(legacy);
 @import "./clients.css" layer(legacy);
+@import "./finish.css" layer(legacy);
 
 @theme inline {
   --color-bg: #0a0a0a;

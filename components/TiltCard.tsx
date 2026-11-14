@@ -15,6 +15,9 @@ export function TiltCard({ children }: { children: ReactNode }) {
       onPointerMove={(e) => {
         if (e.pointerType !== "mouse" || !ref.current) return;
         const r = ref.current.getBoundingClientRect();
+        // «прожектор» следует за курсором внутри карточки (CSS .card::after)
+        ref.current.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        ref.current.style.setProperty("--my", `${e.clientY - r.top}px`);
         set((0.5 - (e.clientY - r.top) / r.height) * 8, ((e.clientX - r.left) / r.width - 0.5) * 8);
       }}
       onPointerLeave={() => set(0, 0)}

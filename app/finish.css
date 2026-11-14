@@ -1,0 +1,56 @@
+/* ============================================================
+   Финальная полировка: прогресс прокрутки, прожектор на карточках, процесс, финальный призыв и футер.
+   ============================================================ */
+
+/* ---------- полоса прогресса ---------- */
+.scrollbar{position:fixed;left:0;top:0;right:0;height:2px;z-index:95;background:var(--lime);transform:scaleX(0);transform-origin:0 50%;pointer-events:none}
+
+/* ---------- карточки услуг: прожектор за курсором ---------- */
+.card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s ease;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,0%),rgba(184,255,60,.09),transparent 62%);
+}
+.tilt-wrap:hover .card::after{opacity:1}
+
+/* ---------- процесс ---------- */
+.pstep{padding-top:34px}
+.pstep b{
+  display:block;font:900 clamp(40px,4.6vw,64px)/1 'Unbounded','Unbounded Fallback',sans-serif;letter-spacing:0;
+  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.26);transition:-webkit-text-stroke-color .3s ease,color .3s ease;
+}
+.pstep:hover b{-webkit-text-stroke-color:var(--lime)}
+.pstep h3{font-size:18px;margin-top:14px}
+.pstep p{font-size:14px;max-width:260px}
+
+/* ---------- финальный призыв ---------- */
+#contacts{padding:clamp(80px,12vw,160px) 0 clamp(56px,8vw,110px)}
+#contacts .cta{max-width:980px}
+#contacts .cta-h{font-size:clamp(34px,6.4vw,92px);line-height:1.02;letter-spacing:-.01em;text-transform:uppercase}
+#contacts .cta-h em{font-style:normal;color:var(--lime)}
+#contacts .cta-p{margin:26px 0 0;max-width:520px;color:var(--fg2);font:500 clamp(15px,1.4vw,18px)/1.55 'Manrope','Manrope Fallback',sans-serif;text-align:left}
+#contacts .ctas{justify-content:flex-start;margin-top:36px}
+@media(max-width:640px){#contacts .ctas{flex-direction:column;align-items:stretch}}
+
+/* ---------- футер ---------- */
+footer{padding:clamp(56px,7vw,96px) 0 28px;overflow:hidden}
+.f-grid{display:grid;gap:40px;grid-template-columns:1fr}
+@media(min-width:760px){.f-grid{grid-template-columns:1.6fr 1fr 1fr;gap:56px}}
+.f-brand img{height:26px;width:auto}
+.f-brand p{margin:18px 0 0;max-width:340px;color:var(--fg2);font:500 15px/1.55 'Manrope','Manrope Fallback',sans-serif}
+.f-col{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.f-t{margin-bottom:6px;font:700 12px 'JetBrains Mono','JetBrains Mono Fallback',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--fg3)}
+.f-col a{color:#fff;text-decoration:none;font:600 15px 'Manrope','Manrope Fallback',sans-serif;transition:color .2s ease}
+.f-col a:hover{color:var(--lime)}
+.f-word{
+  margin-top:clamp(40px,6vw,88px);white-space:nowrap;text-align:center;user-select:none;pointer-events:none;
+  font:700 clamp(50px,15.2vw,300px)/.8 'Chakra Petch','Chakra Petch Fallback',sans-serif;letter-spacing:.02em;
+  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.16);
+}
+.f-bottom{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:clamp(28px,4vw,48px);padding-top:20px;border-top:1px solid var(--line-soft)}
+.f-bottom p{margin:0;font-size:12px;color:var(--fg3)}
+.f-up{display:inline-flex;gap:8px;align-items:center;color:#fff;text-decoration:none;font:700 12px 'JetBrains Mono','JetBrains Mono Fallback',monospace;letter-spacing:.1em;text-transform:uppercase;transition:color .2s ease}
+.f-up i{font-style:normal;transition:transform .25s ease}
+.f-up:hover{color:var(--lime)}
+.f-up:hover i{transform:translateY(-3px)}
+
+@media(prefers-reduced-motion:reduce){.scrollbar{transition:none}}
